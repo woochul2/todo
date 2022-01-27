@@ -13,8 +13,16 @@ Model.prototype.read = function () {
   return this.storage.get();
 };
 
-/** 스토리지에 항목을 추가한다. */
-Model.prototype.create = function () {};
+/**
+ * 스토리지에 항목을 추가한다.
+ *
+ * @param {Item} item
+ */
+Model.prototype.create = function (item) {
+  var data = this.read();
+  var nextData = [...data, item];
+  this.storage.set(nextData);
+};
 
 /** 스토리지의 값 하나를 수정한다. */
 Model.prototype.update = function () {};

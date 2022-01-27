@@ -14,7 +14,9 @@ export default function Controller(model, view) {
 }
 
 /** 최초 생성 시 사용자 입력에 따라 어떤 함수를 실행할지 설정한다. */
-Controller.prototype.init = function () {};
+Controller.prototype.init = function () {
+  this.view.watch('new-input', this.add.bind(this));
+};
 
 /**
  * URL hash에 따라 View를 초기화한다.
@@ -25,8 +27,23 @@ Controller.prototype.setView = function () {
   this.view.render(data);
 };
 
-/** 항목을 추가한다. */
-Controller.prototype.add = function () {};
+/**
+ * 항목을 추가한다.
+ *
+ * @param {string} title title이 비어있으면 항목을 추가하지 않는다.
+ * @returns {boolean} 항목을 정상적으로 추가 했는지에 대한 결과를 반환한다.
+ */
+Controller.prototype.add = function (title) {
+  var trimmedTitle = title.trim();
+  if (trimmedTitle === '') {
+    return false;
+  }
+
+  var item = { id: Date.now(), title: trimmedTitle, completed: false };
+  this.model.create(item);
+  this.setView();
+  return true;
+};
 
 /** 항목의 내용을 수정한다. */
 Controller.prototype.edit = function () {};
