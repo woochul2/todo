@@ -3,11 +3,14 @@
  */
 export default function Template() {}
 
-/** 항목 내용과 id, 완료 여부 정보를 가진 템플릿 */
-Template.prototype.todo = function () {};
+/** id, 제목, 완료 상태를 가진 항목들  */
+Template.prototype.todos = function (data) {
+  function callback(el) {
+    return `<li id="${el.id}" class="todo">${el.title}</li>`;
+  }
 
-/** 항목 개수 템플릿 */
-Template.prototype.counter = function () {};
+  return data.map(callback).join('');
+};
 
-/** 전체 완료 항목을 삭제하는 버튼 템플릿 */
+/** 전체 완료 항목을 삭제하는 버튼 */
 Template.prototype.clearCompletedButton = function () {};

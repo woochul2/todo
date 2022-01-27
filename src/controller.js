@@ -1,3 +1,6 @@
+import Model from './model.js';
+import View from './view.js';
+
 /**
  * @constructor
  * @param {Model} model
@@ -17,7 +20,10 @@ Controller.prototype.init = function () {};
  * URL hash에 따라 View를 초기화한다.
  * 전체 항목, 작업 중인 항목, 완료한 항목 중 무엇을 출력할지 결정한다.
  */
-Controller.prototype.setView = function () {};
+Controller.prototype.setView = function () {
+  var data = this.model.read();
+  this.view.render(data);
+};
 
 /** 항목을 추가한다. */
 Controller.prototype.add = function () {};

@@ -1,3 +1,5 @@
+import Store from './store.js';
+
 /**
  * @constructor
  * @param {Store} storage
@@ -7,7 +9,9 @@ export default function Model(storage) {
 }
 
 /** 스토리지에서 원하는 값을 읽어들인다. */
-Model.prototype.read = function () {};
+Model.prototype.read = function () {
+  return this.storage.get();
+};
 
 /** 스토리지에 항목을 추가한다. */
 Model.prototype.create = function () {};
