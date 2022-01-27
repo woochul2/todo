@@ -1,3 +1,3 @@
-import app from './app.js';
+import App from './app.js';
 
-app('todo');
+new App('todo');
