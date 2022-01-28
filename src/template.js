@@ -11,7 +11,14 @@ export default function Template() {}
  */
 Template.prototype.todos = function (items) {
   function callback(el) {
-    return `<li id="${el.id}" class="todo">${el.title}</li>`;
+    return `
+      <li id="${el.id}" class="todo">
+        <div class="todo__inside">
+          <span>${el.title}</span>
+          <button class="delete">삭제</button>
+        </div>
+      </li>
+    `;
   }
 
   return items.map(callback).join('');

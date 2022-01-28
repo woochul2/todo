@@ -24,11 +24,24 @@ Model.prototype.create = function (item) {
   this.storage.set(nextData);
 };
 
-/** 스토리지의 값 하나를 수정한다. */
-Model.prototype.update = function () {};
+/**
+ * 스토리지의 항목 하나를 삭제한다.
+ *
+ * @param {string | number} id
+ */
+Model.prototype.delete = function (id) {
+  var data = this.read();
 
-/** 스토리지의 항목 하나를 삭제한다. */
-Model.prototype.delete = function () {};
+  function callback(el) {
+    return el.id !== Number(id);
+  }
+
+  var nextData = data.filter(callback);
+  this.storage.set(nextData);
+};
+
+/** 스토리지의 항목 하나를 수정한다. */
+Model.prototype.update = function () {};
 
 /** 스토리지의 모든 항목을 수정한다. */
 Model.prototype.updateAll = function () {};

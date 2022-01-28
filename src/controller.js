@@ -16,6 +16,7 @@ export default function Controller(model, view) {
 /** 최초 생성 시 사용자 입력에 따라 어떤 함수를 실행할지 설정한다. */
 Controller.prototype.init = function () {
   this.view.watch('new-input', this.add.bind(this));
+  this.view.watch('remove', this.remove.bind(this));
 };
 
 /**
@@ -45,11 +46,18 @@ Controller.prototype.add = function (title) {
   return true;
 };
 
+/**
+ * 항목 하나를 삭제한다.
+ *
+ * @param {string | number} id
+ */
+Controller.prototype.remove = function (id) {
+  this.model.delete(id);
+  this.setView();
+};
+
 /** 항목의 내용을 수정한다. */
 Controller.prototype.edit = function () {};
-
-/** 항목 하나를 삭제한다. */
-Controller.prototype.remove = function () {};
 
 /** 항목의 완료 상태를 토글한다. */
 Controller.prototype.toggle = function () {};

@@ -51,6 +51,8 @@ View.prototype.render = function (items) {
 View.prototype.watch = function (name, handler) {
   if (name === 'new-input') {
     this.newInput(handler);
+  } else if (name === 'remove') {
+    this.remove(handler);
   }
 };
 
@@ -68,6 +70,24 @@ View.prototype.newInput = function (handler) {
     var hasAdded = handler(event.target.value);
     if (hasAdded) {
       event.target.value = '';
+    }
+  });
+};
+
+/**
+ * 사용자가 항목 삭제 버튼을 누르면 그 항목을 삭제하는 이벤트 리스너를 등록한다.
+ *
+ * @param {function} handler id를 받아 항목 하나를 삭제하는 함수
+ */
+View.prototype.remove = function (handler) {
+  this.$todos.addEventListener('click', function (event) {
+    var todo = event.target.closest('.todo');
+    if (!todo) {
+      return;
+    }
+
+    if (event.target.closest('.delete')) {
+      handler(todo.id);
     }
   });
 };
