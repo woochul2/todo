@@ -17,6 +17,8 @@ export default function Controller(model, view) {
 Controller.prototype.init = function () {
   this.view.watch('new-input', this.add.bind(this));
   this.view.watch('remove', this.remove.bind(this));
+  this.view.watch('edit-start', this.editStart.bind(this));
+  this.view.watch('edit', this.edit.bind(this));
 };
 
 /**
@@ -24,15 +26,18 @@ Controller.prototype.init = function () {
  * 전체 항목, 작업 중인 항목, 완료한 항목 중 무엇을 출력할지 결정한다.
  */
 Controller.prototype.setView = function () {
-  var data = this.model.read();
-  this.view.render(data);
+  function callback(data) {
+    this.view.render('all', data);
+  }
+
+  this.model.read(callback.bind(this));
 };
 
 /**
  * 항목을 추가한다.
  *
  * @param {string} title title이 비어있으면 항목을 추가하지 않는다.
- * @returns {boolean} 항목을 정상적으로 추가 했는지에 대한 결과를 반환한다.
+ * @returns {boolean} 항목을 정상적으로 추가했는지에 대한 결과를 반환한다.
  */
 Controller.prototype.add = function (title) {
   var trimmedTitle = title.trim();
@@ -40,9 +45,11 @@ Controller.prototype.add = function (title) {
     return false;
   }
 
-  var item = { id: Date.now(), title: trimmedTitle, completed: false };
-  this.model.create(item);
-  this.setView();
+  function callback(item) {
+    this.view.render('add', item);
+  }
+
+  this.model.create(trimmedTitle, callback.bind(this));
   return true;
 };
 
@@ -52,12 +59,41 @@ Controller.prototype.add = function (title) {
  * @param {string | number} id
  */
 Controller.prototype.remove = function (id) {
-  this.model.delete(id);
-  this.setView();
+  function callback(id) {
+    this.view.render('remove', id);
+  }
+
+  this.model.delete(id, callback.bind(this));
 };
 
-/** 항목의 내용을 수정한다. */
-Controller.prototype.edit = function () {};
+/**
+ * 항목 내용 수정을 시작할 수 있도록 상태를 변경한다.
+ *
+ * @param {string | number} id
+ */
+Controller.prototype.editStart = function (id) {
+  this.view.render('edit-start', id);
+};
+
+/**
+ * 항목의 내용을 수정한다.
+ *
+ * @param {string | number} id
+ * @param {string | undefined} title
+ */
+Controller.prototype.edit = function (id, title) {
+  var trimmedTitle = title && title.trim();
+
+  function callback(id, title) {
+    this.view.render('edit', { id, title });
+  }
+
+  if (trimmedTitle === '') {
+    callback.call(this, id, trimmedTitle);
+  } else {
+    this.model.update(id, trimmedTitle, callback.bind(this));
+  }
+};
 
 /** 항목의 완료 상태를 토글한다. */
 Controller.prototype.toggle = function () {};

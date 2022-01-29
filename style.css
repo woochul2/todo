@@ -1,7 +1,10 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   word-break: break-word;
 }
 
@@ -9,11 +12,30 @@ body {
   display: flex;
   flex-direction: column;
   width: 21.875rem;
+  margin: 0 auto;
 }
 
-.new-input {
+.label {
+  width: 100%;
+  font-size: 0;
+}
+
+.input {
+  width: 100%;
+}
+
+.new-input-box {
+  display: flex;
+}
+
+.new-input-box .input {
   font-size: 1.25rem;
+  flex-grow: 1;
   padding: 0.5rem;
+}
+
+.new-input-box .button {
+  min-width: 50px;
 }
 
 .todos {
@@ -32,7 +54,34 @@ body {
 
 .todo__inside {
   display: flex;
-  justify-content: space-between;
+  gap: 0.625rem;
+}
+
+.todo .title {
+  flex-grow: 1;
+}
+
+.todo .label-edit {
+  flex-grow: 1;
+}
+
+.todo .input-edit {
+  font-size: 1.25rem;
+  padding: 0.125rem;
+}
+
+.todo .button-container {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.todo .button-container button {
+  min-width: 50px;
+}
+
+.todo.editing .title {
+  display: none;
 }
 
 .count {
