@@ -1,22 +1,23 @@
-import { KEY } from './constants.js';
-import Template from './template.js';
+import { KEY } from '../../constants.js';
+import ItemsTemplate from './items-template.js';
 
 /**
  * @constructor
- * @param {Template} template
+ * @param {ItemsTemplate} template
  */
-export default function View(template) {
+export default function ItemsView(template) {
   this.template = template;
 
-  this.$newInputBox = document.querySelector('.new-input-box');
-  this.$todos = document.querySelector('.todos');
+  this.$username = document.querySelector('.user-name');
+  this.$newInputBox = document.querySelector('.new-item-box');
+  this.$items = document.querySelector('.items');
   this.$count = document.querySelector('.count');
 
   this.init();
 }
 
 /** 최초 생성 시 포커스 이벤트 리스너를 등록한다. */
-View.prototype.init = function () {
+ItemsView.prototype.init = function () {
   window.addEventListener('keydown', this.focus.bind(this));
 };
 
@@ -25,7 +26,7 @@ View.prototype.init = function () {
  *
  * @param {KeyboardEvent} event
  */
-View.prototype.focus = function (event) {
+ItemsView.prototype.focus = function (event) {
   if (event.key === '/') {
     event.preventDefault();
     var input = this.$newInputBox.querySelector('.input');
@@ -39,8 +40,8 @@ View.prototype.focus = function (event) {
  * @param {string} name 사용자 입력 이름
  * @param {function} handler 사용자 입력에 따라 실행할 함수
  */
-View.prototype.watch = function (name, handler) {
-  if (name === 'new-input') {
+ItemsView.prototype.watch = function (name, handler) {
+  if (name === 'new-item') {
     this.watchNewInput(handler);
   } else if (name === 'remove') {
     this.watchRemove(handler);
@@ -54,18 +55,21 @@ View.prototype.watch = function (name, handler) {
 /**
  * 입력한 title에 따라 새로운 항목을 추가하는 이벤트 리스너를 등록한다.
  *
- * @param {function} handler title을 받아 작동 결과를 boolean으로 반환하는 함수
+ * @param {function} handler title을 받아 항목을 추가하는 함수
  */
-View.prototype.watchNewInput = function (handler) {
+ItemsView.prototype.watchNewInput = function (handler) {
   function keydownListener(event) {
     if (event.key !== KEY.ENTER) {
       return;
     }
 
-    var hasAdded = handler(event.target.value);
-    if (hasAdded) {
-      event.target.value = '';
+    var title = event.target.value.trim();
+    if (title === '') {
+      return;
     }
+
+    handler(title);
+    event.target.value = '';
   }
 
   function clickListener(event) {
@@ -74,14 +78,17 @@ View.prototype.watchNewInput = function (handler) {
       return;
     }
 
-    var inputBox = event.target.closest('.new-input-box');
+    var inputBox = event.target.closest('.new-item-box');
     var input = inputBox.querySelector('.input');
 
-    var hasAdded = handler(input.value);
-    if (hasAdded) {
-      input.value = '';
-      input.focus();
+    var title = input.value.trim();
+    if (title === '') {
+      return;
     }
+
+    handler(title);
+    input.value = '';
+    input.focus();
   }
 
   this.$newInputBox.addEventListener('keydown', keydownListener);
@@ -93,17 +100,17 @@ View.prototype.watchNewInput = function (handler) {
  *
  * @param {function} handler id를 받아 항목 하나를 삭제하는 함수
  */
-View.prototype.watchRemove = function (handler) {
+ItemsView.prototype.watchRemove = function (handler) {
   function listener(event) {
-    var todo = event.target.closest('.todo');
-    if (!todo || !event.target.closest('.delete-btn')) {
+    var item = event.target.closest('.item');
+    if (!item || !event.target.closest('.delete-btn')) {
       return;
     }
 
-    handler(todo.dataset.id);
+    handler(Number(item.dataset.id));
   }
 
-  this.$todos.addEventListener('click', listener);
+  this.$items.addEventListener('click', listener);
 };
 
 /**
@@ -111,33 +118,33 @@ View.prototype.watchRemove = function (handler) {
  *
  * @param {function} handler id를 받아 항목 수정 시작을 알리는 함수
  */
-View.prototype.watchEditStart = function (handler) {
+ItemsView.prototype.watchEditStart = function (handler) {
   function doubleClickListener(event) {
     if (!event.target.closest('.title')) {
       return;
     }
 
-    var todo = event.target.closest('.todo');
-    if (!todo || todo.classList.contains('editing')) {
+    var item = event.target.closest('.item');
+    if (!item || item.classList.contains('editing')) {
       return;
     }
 
-    handler(todo.dataset.id);
+    handler(Number(item.dataset.id));
   }
 
   function clickListener(event) {
-    var todo = event.target.closest('.todo');
-    if (!todo || !event.target.closest('.edit-btn') || todo.classList.contains('editing')) {
+    var item = event.target.closest('.item');
+    if (!item || !event.target.closest('.edit-btn') || item.classList.contains('editing')) {
       return;
     }
 
-    handler(todo.dataset.id);
+    handler(Number(item.dataset.id));
 
-    todo.startedEditing = true;
+    item.startedEditing = true;
   }
 
-  this.$todos.addEventListener('dblclick', doubleClickListener);
-  this.$todos.addEventListener('click', clickListener);
+  this.$items.addEventListener('dblclick', doubleClickListener);
+  this.$items.addEventListener('click', clickListener);
 };
 
 /**
@@ -145,42 +152,42 @@ View.prototype.watchEditStart = function (handler) {
  *
  * @param {function} handler id와 title을 받아 항목을 수정하는 함수
  */
-View.prototype.watchEdit = function (handler) {
+ItemsView.prototype.watchEdit = function (handler) {
   function clickListener(event) {
-    var todo = event.target.closest('.todo');
-    if (!todo || !event.target.closest('.edit-btn')) {
+    var item = event.target.closest('.item');
+    if (!item || !event.target.closest('.edit-btn')) {
       return;
     }
 
-    if (todo.startedEditing) {
-      todo.startedEditing = false;
+    if (item.startedEditing) {
+      item.startedEditing = false;
       return;
     }
 
-    var input = todo.querySelector('.input-edit');
-    var nextTitle = input.value;
-    handler(todo.dataset.id, nextTitle);
+    var input = item.querySelector('.input-edit');
+    var title = input.value.trim();
+    handler(Number(item.dataset.id), title);
   }
 
   function keydownListener(event) {
-    var todo = event.target.closest('.todo');
-    if (!todo || !event.target.closest('.input-edit')) {
+    var item = event.target.closest('.item');
+    if (!item || !event.target.closest('.input-edit')) {
       return;
     }
 
-    todo.startedEditing = false;
+    item.startedEditing = false;
 
     if (event.key === KEY.ENTER) {
-      var input = todo.querySelector('.input-edit');
+      var input = item.querySelector('.input-edit');
       var nextTitle = input.value;
-      handler(todo.dataset.id, nextTitle);
+      handler(Number(item.dataset.id), nextTitle);
     } else if (event.key === KEY.ESCAPE) {
-      handler(todo.dataset.id);
+      handler(Number(item.dataset.id));
     }
   }
 
-  this.$todos.addEventListener('click', clickListener);
-  this.$todos.addEventListener('keydown', keydownListener);
+  this.$items.addEventListener('click', clickListener);
+  this.$items.addEventListener('keydown', keydownListener);
 };
 
 /**
@@ -189,7 +196,7 @@ View.prototype.watchEdit = function (handler) {
  * @param {string} command 명령어 이름
  * @param {*} parameter DOM 엘리먼트를 업데이트하는 데 필요한 변수
  */
-View.prototype.render = function (command, parameter) {
+ItemsView.prototype.render = function (command, parameter) {
   if (command === 'all') {
     this.renderAll(parameter);
   } else if (command === 'add') {
@@ -206,14 +213,17 @@ View.prototype.render = function (command, parameter) {
 /**
  * 전체 화면을 새로 렌더링한다.
  *
- * @param {Item[]} items
+ * @param {object} param
+ * @param {string} param.username
+ * @param {Item[]} param.items
  */
-View.prototype.renderAll = function (items) {
+ItemsView.prototype.renderAll = function ({ username, items }) {
   function callback(el) {
-    return this.template.todo(el);
+    return this.template.item(el);
   }
 
-  this.$todos.innerHTML = items.map(callback, this).join('');
+  this.$username.innerHTML = username;
+  this.$items.innerHTML = items.map(callback, this).join('');
   this.$count.innerHTML = `${items.length}개`;
 };
 
@@ -222,10 +232,10 @@ View.prototype.renderAll = function (items) {
  *
  * @param {Item} item
  */
-View.prototype.renderAdd = function (item) {
+ItemsView.prototype.renderAdd = function (item) {
   var tmp = document.createElement('div');
-  tmp.innerHTML = this.template.todo(item);
-  this.$todos.appendChild(tmp.firstElementChild);
+  tmp.innerHTML = this.template.item(item);
+  this.$items.appendChild(tmp.firstElementChild);
 
   var nextCount = parseInt(this.$count.innerHTML) + 1;
   this.$count.innerHTML = `${nextCount}개`;
@@ -234,11 +244,11 @@ View.prototype.renderAdd = function (item) {
 /**
  * 삭제한 항목만 DOM에서 없애준다.
  *
- * @param {string | number} id
+ * @param {number} itemId
  */
-View.prototype.renderRemove = function (id) {
-  var item = this.$todos.querySelector(`.todo[data-id="${id}"]`);
-  this.$todos.removeChild(item);
+ItemsView.prototype.renderRemove = function (itemId) {
+  var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
+  this.$items.removeChild(item);
 
   var nextCount = parseInt(this.$count.innerHTML) - 1;
   this.$count.innerHTML = `${nextCount}개`;
@@ -247,10 +257,10 @@ View.prototype.renderRemove = function (id) {
 /**
  * 항목에 input을 추가하여 수정을 시작한다.
  *
- * @param {string | number} id
+ * @param {number} itemId
  */
-View.prototype.renderEditStart = function (id) {
-  var item = this.$todos.querySelector(`.todo[data-id="${id}"]`);
+ItemsView.prototype.renderEditStart = function (itemId) {
+  var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
   item.classList.add('editing');
   var title = item.querySelector('.title');
   title.outerHTML = this.template.editInput(title.innerHTML);
@@ -268,11 +278,11 @@ View.prototype.renderEditStart = function (id) {
  * 수정한 항목의 title만 변경한다.
  *
  * @param {object} param
- * @param {string | number} param.id
+ * @param {number} param.itemId
  * @param {string} param.title 새로 입력한 제목
  */
-View.prototype.renderEdit = function ({ id, title }) {
-  var item = this.$todos.querySelector(`.todo[data-id="${id}"]`);
+ItemsView.prototype.renderEdit = function ({ itemId, title }) {
+  var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
   item.classList.remove('editing');
 
   var label = item.querySelector('.label-edit');

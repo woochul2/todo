@@ -1,7 +1,7 @@
 /**
  * @constructor
  */
-export default function Template() {}
+export default function ItemsTemplate() {}
 
 /**
  * id, 제목, 완료 상태를 가진 항목
@@ -9,10 +9,10 @@ export default function Template() {}
  * @param {Item} item
  * @returns {string}
  */
-Template.prototype.todo = function (item) {
+ItemsTemplate.prototype.item = function (item) {
   return `
-    <li data-id="${item.id}" class="todo">
-      <div class="todo__inside">
+    <li data-id="${item.id}" class="item">
+      <div class="item__inside">
         <span class="title">${item.title}</span>
         <div class="button-container">
           <button class="edit-btn" aria-label="수정">수정</button>
@@ -29,7 +29,7 @@ Template.prototype.todo = function (item) {
  * @param {*} title
  * @returns {string}
  */
-Template.prototype.title = function (title) {
+ItemsTemplate.prototype.title = function (title) {
   return `<span class="title">${title}</span>`;
 };
 
@@ -39,7 +39,7 @@ Template.prototype.title = function (title) {
  * @param {string} value
  * @returns {string}
  */
-Template.prototype.editInput = function (value) {
+ItemsTemplate.prototype.editInput = function (value) {
   return `
     <label class="label label-edit">
       항목 제목 수정
@@ -49,4 +49,4 @@ Template.prototype.editInput = function (value) {
 };
 
 /** 모든 완료 항목을 삭제하는 버튼 */
-Template.prototype.clearCompletedButton = function () {};
+ItemsTemplate.prototype.clearCompletedButton = function () {};

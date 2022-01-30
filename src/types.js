@@ -1,6 +1,12 @@
 /**
  * @typedef {Object} Item
- * @property {number} item.id
- * @property {string} item.title
- * @property {boolean} item.completed
+ * @property {number} id
+ * @property {string} title
+ * @property {boolean} completed
+ */
+
+/**
+ * @typedef {Object} User
+ * @property {number} id
+ * @property {Item[]} items
  */
