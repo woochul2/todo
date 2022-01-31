@@ -14,7 +14,7 @@ export default function ItemsModel(userId) {
 ItemsModel.prototype.init = function () {
   var user = this.getUser();
   if (!user) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }
 };
 

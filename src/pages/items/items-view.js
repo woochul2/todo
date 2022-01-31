@@ -13,12 +13,21 @@ export default function ItemsView(template) {
   this.$items = document.querySelector('.items');
   this.$count = document.querySelector('.count');
 
-  this.init();
+  this.removeEventListener = this.init();
 }
 
-/** 최초 생성 시 포커스 이벤트 리스너를 등록한다. */
+/**
+ * 최초 생성 시 포커스 이벤트 리스너를 등록하고, 이벤트 리스너를 삭제하는 함수를 반환한다.
+ *
+ * @returns {function}
+ */
 ItemsView.prototype.init = function () {
-  window.addEventListener('keydown', this.focus.bind(this));
+  var listener = this.focus.bind(this);
+  window.addEventListener('keydown', listener);
+
+  return function () {
+    window.removeEventListener('keydown', listener);
+  };
 };
 
 /**
@@ -29,6 +38,7 @@ ItemsView.prototype.init = function () {
 ItemsView.prototype.focus = function (event) {
   if (event.key === '/') {
     event.preventDefault();
+
     var input = this.$newInputBox.querySelector('.input');
     input.focus();
   }
@@ -248,7 +258,7 @@ ItemsView.prototype.renderAdd = function (item) {
  */
 ItemsView.prototype.renderRemove = function (itemId) {
   var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
-  this.$items.removeChild(item);
+  item.remove();
 
   var nextCount = parseInt(this.$count.innerHTML) - 1;
   this.$count.innerHTML = `${nextCount}개`;

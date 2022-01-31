@@ -145,7 +145,7 @@ HomeView.prototype.renderAdd = function (user) {
  */
 HomeView.prototype.renderRemove = function (userId) {
   var user = this.$users.querySelector(`.user[data-id="${userId}"]`);
-  this.$users.removeChild(user);
+  user.remove();
 };
 
 /**
