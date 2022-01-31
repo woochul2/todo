@@ -15,7 +15,7 @@ function getPath(path) {
 
 function main() {
   var app = express();
-  var port = 3000;
+  var port = process.env.PORT || 3000;
 
   app.use('/', express.static(getPath('./src')));
   app.use('/:any', express.static(getPath('./src')));
@@ -25,7 +25,7 @@ function main() {
   });
 
   app.listen(port, function () {
-    console.log(`Server is listening on http://localhost:${port}/`);
+    console.log(`Server is listening on port ${port}/`);
   });
 }
 
