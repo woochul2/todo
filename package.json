@@ -2,15 +2,16 @@
   "name": "todo",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "express": "^4.17.2"
   },
   "devDependencies": {
+    "cypress": "^9.4.1",
     "nodemon": "^2.0.15"
   }
 }

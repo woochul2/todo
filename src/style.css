@@ -15,6 +15,31 @@ body {
   margin: 0 auto;
 }
 
+.new-user-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-user-box label {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.new-user-box .input-container {
+  display: flex;
+}
+
+.new-user-box .input {
+  font-size: 1.25rem;
+  flex-grow: 1;
+  padding: 0.5rem;
+}
+
+.new-user-box .button {
+  font-size: 1rem;
+  min-width: 3.125rem;
+}
+
 .page-items .user {
   text-align: center;
   font-weight: normal;

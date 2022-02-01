@@ -1,16 +1,14 @@
-import express from 'express';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+var express = require('express');
+var path = require('path');
 
 /**
  * 현재 파일을 기준으로 대상의 상대 경로를 구한다.
  *
- * @param {string} path
+ * @param {string} target
  * @returns {string}
  */
-function getPath(path) {
-  var __dirname = dirname(fileURLToPath(import.meta.url));
-  return join(__dirname, path);
+function getPath(target) {
+  return path.join(__dirname, target);
 }
 
 function main() {

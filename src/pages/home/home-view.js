@@ -1,3 +1,4 @@
+import { KEY } from '../../constants.js';
 import HomeTemplate from './home-template.js';
 
 /**
@@ -7,9 +8,39 @@ import HomeTemplate from './home-template.js';
 export default function HomeView(template) {
   this.template = template;
 
-  this.$newUser = document.querySelector('.new-user');
+  this.$newUserBox = document.querySelector('.new-user-box');
   this.$users = document.querySelector('.users');
+
+  this.removeEventListener = this.init();
 }
+
+/**
+ * 최초 생성 시 포커스 이벤트 리스너를 등록하고, 이벤트 리스너를 삭제하는 함수를 반환한다.
+ *
+ * @returns {function}
+ */
+HomeView.prototype.init = function () {
+  var listener = this.focus.bind(this);
+  window.addEventListener('keydown', listener);
+
+  return function () {
+    window.removeEventListener('keydown', listener);
+  };
+};
+
+/**
+ * 슬래시(/) 키를 누르면 입력 창에 포커스 되도록 한다.
+ *
+ * @param {KeyboardEvent} event
+ */
+HomeView.prototype.focus = function (event) {
+  if (event.key === '/') {
+    event.preventDefault();
+
+    var input = this.$newUserBox.querySelector('.input');
+    input.focus();
+  }
+};
 
 /**
  * 사용자 입력을 감지해 입력 별로 특정 함수를 실행한다.
@@ -34,21 +65,41 @@ HomeView.prototype.watch = function (name, handler) {
  * @param {function} handler username을 받아 유저를 추가하는 함수
  */
 HomeView.prototype.watchNewInput = function (handler) {
-  function listener() {
-    var value = window.prompt('추가할 사용자 이름을 입력하세요:');
-    if (!value) {
+  function keydownListener(event) {
+    if (event.key !== KEY.ENTER) {
       return;
     }
 
-    var username = value.trim();
+    var username = event.target.value.trim();
     if (username === '') {
       return;
     }
 
     handler(username);
+    event.target.value = '';
   }
 
-  this.$newUser.addEventListener('click', listener);
+  function clickListener(event) {
+    var button = event.target.closest('.button');
+    if (!button) {
+      return;
+    }
+
+    var inputBox = event.target.closest('.new-user-box');
+    var input = inputBox.querySelector('.input');
+
+    var username = input.value.trim();
+    if (username === '') {
+      return;
+    }
+
+    handler(username);
+    input.value = '';
+    input.focus();
+  }
+
+  this.$newUserBox.addEventListener('keydown', keydownListener);
+  this.$newUserBox.addEventListener('click', clickListener);
 };
 
 /**

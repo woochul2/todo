@@ -24,11 +24,19 @@ export default function Home(root) {
 Home.prototype.init = function () {
   this.root.innerHTML = `
     <main class="main page-home">
-      <button class="new-user" aria-label="사용자 추가">사용자 추가</button>
+      <div class="new-user-box">
+        <label for="new-user">새로 추가할 사용자 이름을 입력하세요.</label>
+        <div class="input-container">
+          <input class="input" name="new-user" autofocus />
+          <button class="button new-user" aria-label="새로운 사용자 추가">추가</button>
+        </div>
+      </div>
       <ul class="users"></ul>
     </main>
   `;
 };
 
 /** 페이지가 바뀔 때 글로벌 이벤트 리스너를 제거하는 메소드 */
-Home.prototype.removeEventListener = function () {};
+Home.prototype.removeEventListener = function () {
+  this.view.removeEventListener();
+};
