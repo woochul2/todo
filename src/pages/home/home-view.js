@@ -15,11 +15,14 @@ export default function HomeView(template) {
 }
 
 /**
- * 최초 생성 시 포커스 이벤트 리스너를 등록하고, 이벤트 리스너를 삭제하는 함수를 반환한다.
+ * 최초 생성 시 입력 창에 포커스를 옮기고, 포커스 이벤트 리스너를 등록한다.
  *
- * @returns {function}
+ * @returns {function} 이벤트 리스너를 삭제하는 함수
  */
 HomeView.prototype.init = function () {
+  var input = this.$newUserBox.querySelector('.input');
+  input.focus();
+
   var listener = this.focus.bind(this);
   window.addEventListener('keydown', listener);
 

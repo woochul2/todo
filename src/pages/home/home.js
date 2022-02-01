@@ -27,7 +27,7 @@ Home.prototype.init = function () {
       <div class="new-user-box">
         <label for="new-user">새로 추가할 사용자 이름을 입력하세요.</label>
         <div class="input-container">
-          <input class="input" name="new-user" autofocus />
+          <input class="input" name="new-user" />
           <button class="button new-user" aria-label="새로운 사용자 추가">추가</button>
         </div>
       </div>

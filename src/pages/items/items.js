@@ -26,13 +26,13 @@ export default function Items(root) {
  */
 Items.prototype.init = function () {
   this.root.innerHTML = `
-    <a href="/" aria-label="홈">홈</a>
+    <a href="/" class="home-link" aria-label="홈">홈</a>
     <main class="main page-items">
       <h1 class="user"><span class="user-name"></span>의 투두 리스트</h1>
       <div class="new-item-box">
         <label class="label">
           새로운 항목 추가
-          <input class="input" autofocus />
+          <input class="input" />
         </label>
         <button class="button" aria-label="새로운 항목 추가">추가</button>
       </div>

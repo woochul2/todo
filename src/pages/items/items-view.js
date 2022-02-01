@@ -17,11 +17,14 @@ export default function ItemsView(template) {
 }
 
 /**
- * 최초 생성 시 포커스 이벤트 리스너를 등록하고, 이벤트 리스너를 삭제하는 함수를 반환한다.
+ * 최초 생성 시 입력 창에 포커스를 옮기고, 포커스 이벤트 리스너를 등록한다.
  *
- * @returns {function}
+ * @returns {function} 이벤트 리스너를 삭제하는 함수
  */
 ItemsView.prototype.init = function () {
+  var input = this.$newInputBox.querySelector('.input');
+  input.focus();
+
   var listener = this.focus.bind(this);
   window.addEventListener('keydown', listener);
 
@@ -189,7 +192,7 @@ ItemsView.prototype.watchEdit = function (handler) {
 
     if (event.key === KEY.ENTER) {
       var input = item.querySelector('.input-edit');
-      var nextTitle = input.value;
+      var nextTitle = input.value.trim();
       handler(Number(item.dataset.id), nextTitle);
     } else if (event.key === KEY.ESCAPE) {
       handler(Number(item.dataset.id));
