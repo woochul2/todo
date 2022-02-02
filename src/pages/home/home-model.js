@@ -1,9 +1,12 @@
-import Storage from '../../storage.js';
+import Store from '../../storage.js';
 
 /**
  * @constructor
+ * @param {Store} storage
  */
-export default function HomeModel() {}
+export default function HomeModel(storage) {
+  this.storage = storage;
+}
 
 /**
  * 스토리지에서 전체 유저를 읽어들인다.
@@ -11,7 +14,7 @@ export default function HomeModel() {}
  * @param {function} callback 전체 유저를 읽어들인 후 실행할 콜백 함수
  */
 HomeModel.prototype.read = function (callback) {
-  var users = Storage.get();
+  var users = this.storage.get();
   callback(users);
 };
 
@@ -23,8 +26,8 @@ HomeModel.prototype.read = function (callback) {
  */
 HomeModel.prototype.create = function (username, callback) {
   var user = { id: Date.now(), name: username, items: [] };
-  var users = Storage.get();
-  Storage.set([...users, user]);
+  var users = this.storage.get();
+  this.storage.set([...users, user]);
 
   callback(user);
 };
@@ -36,14 +39,14 @@ HomeModel.prototype.create = function (username, callback) {
  * @param {function} callback 유저 삭제 후 실행할 콜백 함수
  */
 HomeModel.prototype.delete = function (userId, callback) {
-  var users = Storage.get();
+  var users = this.storage.get();
 
   function filterCallback(user) {
     return user.id !== userId;
   }
 
   var nextUser = users.filter(filterCallback);
-  Storage.set(nextUser);
+  this.storage.set(nextUser);
 
   callback(userId);
 };
@@ -56,7 +59,7 @@ HomeModel.prototype.delete = function (userId, callback) {
  * @param {function} callback 유저 이름 수정 후 실행할 콜백 함수
  */
 HomeModel.prototype.update = function (userId, username, callback) {
-  var users = Storage.get();
+  var users = this.storage.get();
 
   function findCallback(user) {
     return user.id === userId;
@@ -64,7 +67,7 @@ HomeModel.prototype.update = function (userId, username, callback) {
 
   var user = users.find(findCallback);
   user.name = username;
-  Storage.set(users);
+  this.storage.set(users);
 
   callback(userId, username);
 };

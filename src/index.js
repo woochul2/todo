@@ -1,7 +1,7 @@
 import Home from './pages/home/home.js';
 import Items from './pages/items/items.js';
 
-const root = document.getElementById('root');
+var root = document.getElementById('root');
 
 function render(path) {
   if (path === '/') {

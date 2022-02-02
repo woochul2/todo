@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "cypress": "^9.4.1",
+    "jasmine-core": "^4.0.0",
     "nodemon": "^2.0.15"
   }
 }

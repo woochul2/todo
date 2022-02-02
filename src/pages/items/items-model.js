@@ -1,22 +1,14 @@
-import Storage from '../../storage.js';
+import Store from '../../storage.js';
 
 /**
  * @constructor
+ * @param {Store} storage
  * @param {number} userId
  */
-export default function ItemsModel(userId) {
+export default function ItemsModel(storage, userId) {
+  this.storage = storage;
   this.userId = userId;
-
-  this.init();
 }
-
-/** this.userId에 해당하는 유저가 없으면 홈으로 이동한다. */
-ItemsModel.prototype.init = function () {
-  var user = this.getUser();
-  if (!user) {
-    window.location.href = '/';
-  }
-};
 
 /**
  * this.userId에 해당하는 유저의 인덱스를 반환한다.
@@ -24,7 +16,7 @@ ItemsModel.prototype.init = function () {
  * @returns {number}
  */
 ItemsModel.prototype.getUserIndex = function () {
-  var users = Storage.get();
+  var users = this.storage.get();
 
   function callback(user) {
     return user.id === this.userId;
@@ -40,7 +32,7 @@ ItemsModel.prototype.getUserIndex = function () {
  * @returns {User}
  */
 ItemsModel.prototype.getUser = function () {
-  var users = Storage.get();
+  var users = this.storage.get();
 
   function callback(user) {
     return user.id === this.userId;
@@ -68,11 +60,11 @@ ItemsModel.prototype.read = function (callback) {
  */
 ItemsModel.prototype.create = function (title, callback) {
   var item = { id: Date.now(), title, completed: false };
-  var users = Storage.get();
+  var users = this.storage.get();
   var index = this.getUserIndex();
   var user = users[index];
   user.items = [...user.items, item];
-  Storage.set(users);
+  this.storage.set(users);
 
   callback(item);
 };
@@ -84,7 +76,7 @@ ItemsModel.prototype.create = function (title, callback) {
  * @param {function} callback 항목 삭제 후 실행할 콜백 함수
  */
 ItemsModel.prototype.delete = function (itemId, callback) {
-  var users = Storage.get();
+  var users = this.storage.get();
   var userIndex = this.getUserIndex();
   var user = users[userIndex];
 
@@ -94,7 +86,7 @@ ItemsModel.prototype.delete = function (itemId, callback) {
 
   var itemIndex = user.items.findIndex(findIndexCallback);
   user.items.splice(itemIndex, 1);
-  Storage.set(users);
+  this.storage.set(users);
 
   callback(itemId);
 };
@@ -107,7 +99,7 @@ ItemsModel.prototype.delete = function (itemId, callback) {
  * @param {function} callback 항목 수정 후 실행할 콜백 함수
  */
 ItemsModel.prototype.update = function (itemId, title, callback) {
-  var users = Storage.get();
+  var users = this.storage.get();
   var userIndex = this.getUserIndex();
   var user = users[userIndex];
 
@@ -117,7 +109,7 @@ ItemsModel.prototype.update = function (itemId, title, callback) {
 
   var item = user.items.find(findCallback);
   item.title = title;
-  Storage.set(users);
+  this.storage.set(users);
 
   callback(itemId, title);
 };

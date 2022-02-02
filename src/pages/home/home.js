@@ -1,3 +1,5 @@
+import { STORAGE_KEY } from '../../constants.js';
+import Store from '../../storage.js';
 import HomeController from './home-controller.js';
 import HomeModel from './home-model.js';
 import HomeTemplate from './home-template.js';
@@ -12,7 +14,8 @@ export default function Home(root) {
 
   this.init();
 
-  this.model = new HomeModel();
+  this.storage = new Store(STORAGE_KEY);
+  this.model = new HomeModel(this.storage);
   this.template = new HomeTemplate();
   this.view = new HomeView(this.template);
   this.controller = new HomeController(this.model, this.view);

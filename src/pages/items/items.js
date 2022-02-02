@@ -1,3 +1,5 @@
+import { STORAGE_KEY } from '../../constants.js';
+import Store from '../../storage.js';
 import ItemsController from './items-controller.js';
 import ItemsModel from './items-model.js';
 import ItemsTemplate from './items-template.js';
@@ -12,7 +14,8 @@ export default function Items(root) {
 
   this.init();
 
-  this.model = new ItemsModel(this.userId);
+  this.storage = new Store(STORAGE_KEY);
+  this.model = new ItemsModel(this.storage, this.userId);
   this.template = new ItemsTemplate();
   this.view = new ItemsView(this.template);
   this.controller = new ItemsController(this.model, this.view);
@@ -52,11 +55,14 @@ Items.prototype.init = function () {
 /**
  * 최초 생성 시 URL hash에 따라 View를 초기화하고,
  * URL hash가 바뀌면 View를 새로 초기화하도록 이벤트를 걸어준다.
+ * Model에 ths.userId에 해당하는 유저가 없으면 홈으로 이동한다.
  */
 Items.prototype.setView = function () {
   var user = this.model.getUser();
   if (user) {
     this.controller.setView();
+  } else {
+    window.location.href = '/';
   }
 };
 

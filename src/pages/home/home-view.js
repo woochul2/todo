@@ -147,6 +147,7 @@ HomeView.prototype.watchEdit = function (handler) {
 
     handler(Number(user.dataset.id), username);
   }
+
   this.$users.addEventListener('click', listener);
 };
 
