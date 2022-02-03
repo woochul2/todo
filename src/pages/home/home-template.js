@@ -13,10 +13,10 @@ export default function HomeTemplate() {}
 HomeTemplate.prototype.user = function (userId, username) {
   return `
     <li data-id="${userId}" class="user">
-      <a href="/${userId}/items" class="link" aria-label="${username} 사용자의 항목">${username}</a>
-      <div class="button-container">
-        <button class="edit-btn" aria-label="${username} 사용자의 이름 수정">수정</button>
-        <button class="delete-btn" aria-label="${username} 사용자 삭제">삭제</button>
+      <a href="/${userId}/items" class="user__link" aria-label="${username} 사용자의 항목">${username}</a>
+      <div class="user__btn-container">
+        <button class="user__edit-btn" aria-label="${username} 사용자의 이름 수정">수정</button>
+        <button class="user__delete-btn" aria-label="${username} 사용자 삭제">삭제</button>
       </div>
     </li>
   `;

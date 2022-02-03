@@ -29,18 +29,18 @@ export default function Items(root) {
  */
 Items.prototype.init = function () {
   this.root.innerHTML = `
-    <a href="/" class="home-link" aria-label="홈">홈</a>
     <main class="main page-items">
-      <h1 class="user"><span class="user-name"></span>의 투두 리스트</h1>
-      <div class="new-item-box">
-        <label class="label">
+      <a href="/" class="home-link" aria-label="홈">홈</a>
+      <h1 class="page-items__title"><span class="page-items__username"></span>의 투두 리스트</h1>
+      <div class="new-item">
+        <label class="hidden-label new-item__label">
           새로운 항목 추가
-          <input class="input" />
+          <input class="new-item__input" />
         </label>
-        <button class="button" aria-label="새로운 항목 추가">추가</button>
+        <button class="new-item__btn" aria-label="새로운 항목 추가">추가</button>
       </div>
       <ul class="items"></ul>
-      <div class="count"></div>
+      <div class="items-count"></div>
     </main>
   `;
 

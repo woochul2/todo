@@ -8,7 +8,7 @@ import HomeTemplate from './home-template.js';
 export default function HomeView(template) {
   this.template = template;
 
-  this.$newUserBox = document.querySelector('.new-user-box');
+  this.$newUser = document.querySelector('.new-user');
   this.$users = document.querySelector('.users');
 
   this.removeEventListener = this.init();
@@ -20,7 +20,7 @@ export default function HomeView(template) {
  * @returns {function} 이벤트 리스너를 삭제하는 함수
  */
 HomeView.prototype.init = function () {
-  var input = this.$newUserBox.querySelector('.input');
+  var input = this.$newUser.querySelector('.new-user__input');
   input.focus();
 
   var listener = this.focus.bind(this);
@@ -40,7 +40,7 @@ HomeView.prototype.focus = function (event) {
   if (event.key === '/') {
     event.preventDefault();
 
-    var input = this.$newUserBox.querySelector('.input');
+    var input = this.$newUser.querySelector('.new-user__input');
     input.focus();
   }
 };
@@ -83,14 +83,12 @@ HomeView.prototype.watchNewInput = function (handler) {
   }
 
   function clickListener(event) {
-    var button = event.target.closest('.button');
+    var button = event.target.closest('.new-user__btn');
     if (!button) {
       return;
     }
 
-    var inputBox = event.target.closest('.new-user-box');
-    var input = inputBox.querySelector('.input');
-
+    var input = this.$newUser.querySelector('.new-user__input');
     var username = input.value.trim();
     if (username === '') {
       return;
@@ -101,8 +99,8 @@ HomeView.prototype.watchNewInput = function (handler) {
     input.focus();
   }
 
-  this.$newUserBox.addEventListener('keydown', keydownListener);
-  this.$newUserBox.addEventListener('click', clickListener);
+  this.$newUser.addEventListener('keydown', keydownListener);
+  this.$newUser.addEventListener('click', clickListener.bind(this));
 };
 
 /**
@@ -113,7 +111,7 @@ HomeView.prototype.watchNewInput = function (handler) {
 HomeView.prototype.watchRemove = function (handler) {
   function listener(event) {
     var user = event.target.closest('.user');
-    if (!user || !event.target.closest('.delete-btn')) {
+    if (!user || !event.target.closest('.user__delete-btn')) {
       return;
     }
 
@@ -131,7 +129,7 @@ HomeView.prototype.watchRemove = function (handler) {
 HomeView.prototype.watchEdit = function (handler) {
   function listener(event) {
     var user = event.target.closest('.user');
-    if (!user || !event.target.closest('.edit-btn')) {
+    if (!user || !event.target.closest('.user__edit-btn')) {
       return;
     }
 
@@ -212,6 +210,6 @@ HomeView.prototype.renderRemove = function (userId) {
  */
 HomeView.prototype.renderEdit = function ({ userId, username }) {
   var user = this.$users.querySelector(`.user[data-id="${userId}"]`);
-  var link = user.querySelector('.link');
+  var link = user.querySelector('.user__link');
   link.innerHTML = username;
 };

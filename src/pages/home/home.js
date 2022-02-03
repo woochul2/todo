@@ -27,11 +27,11 @@ export default function Home(root) {
 Home.prototype.init = function () {
   this.root.innerHTML = `
     <main class="main page-home">
-      <div class="new-user-box">
-        <label for="new-user">새로 추가할 사용자 이름을 입력하세요.</label>
-        <div class="input-container">
-          <input class="input" name="new-user" />
-          <button class="button new-user" aria-label="새로운 사용자 추가">추가</button>
+      <div class="new-user">
+        <label class="new-user__label" for="new-user-input">새로 추가할 사용자 이름을 입력하세요.</label>
+        <div class="new-user__container">
+          <input class="new-user__input" name="new-user-input" />
+          <button class="new-user__btn" aria-label="새로운 사용자 추가">추가</button>
         </div>
       </div>
       <ul class="users"></ul>

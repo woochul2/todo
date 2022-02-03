@@ -13,10 +13,10 @@ ItemsTemplate.prototype.item = function (item) {
   return `
     <li data-id="${item.id}" class="item">
       <div class="item__inside">
-        <span class="title">${item.title}</span>
-        <div class="button-container">
-          <button class="edit-btn" aria-label="수정">수정</button>
-          <button class="delete-btn" aria-label="삭제">삭제</button>
+        <span class="item__title">${item.title}</span>
+        <div class="item__btn-container">
+          <button class="item__edit-btn" aria-label="수정">수정</button>
+          <button class="item__delete-btn" aria-label="삭제">삭제</button>
         </div>
       </div>
     </li>
@@ -30,7 +30,7 @@ ItemsTemplate.prototype.item = function (item) {
  * @returns {string}
  */
 ItemsTemplate.prototype.title = function (title) {
-  return `<span class="title">${title}</span>`;
+  return `<span class="item__title">${title}</span>`;
 };
 
 /**
@@ -41,9 +41,9 @@ ItemsTemplate.prototype.title = function (title) {
  */
 ItemsTemplate.prototype.editInput = function (value) {
   return `
-    <label class="label label-edit">
+    <label class="hidden-label item__label-edit">
       항목 제목 수정
-      <input class="input input-edit" value="${value}" />
+      <input class="item__input-edit" value="${value}" />
     </label>
   `;
 };

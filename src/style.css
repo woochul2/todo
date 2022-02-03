@@ -15,62 +15,92 @@ body {
   margin: 0 auto;
 }
 
-.new-user-box {
+.hidden-label {
+  font-size: 0;
+}
+
+.hidden-label input {
+  width: 100%;
+}
+
+.new-user {
   display: flex;
   flex-direction: column;
 }
 
-.new-user-box label {
+.new-user__label {
   font-size: 1.125rem;
   margin-bottom: 0.5rem;
 }
 
-.new-user-box .input-container {
+.new-user__container {
   display: flex;
 }
 
-.new-user-box .input {
+.new-user__input {
   font-size: 1.25rem;
   flex-grow: 1;
   padding: 0.5rem;
 }
 
-.new-user-box .button {
+.new-user__btn {
   font-size: 1rem;
   min-width: 3.125rem;
 }
 
-.page-items .user {
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 1.625rem;
+  list-style: none;
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 0;
+}
+
+.user {
+  position: relative;
+}
+
+.user__link:hover {
+  color: salmon;
+}
+
+.user__btn-container {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  min-width: 6.25rem;
+}
+
+/*  */
+
+.page-items__title {
   text-align: center;
   font-weight: normal;
   font-size: 1.75rem;
 }
 
-.user .user-name {
+.page-items__username {
   font-weight: bold;
   font-size: 2rem;
 }
 
-.label {
-  width: 100%;
-  font-size: 0;
-}
-
-.input {
-  width: 100%;
-}
-
-.new-item-box {
+.new-item {
   display: flex;
 }
 
-.new-item-box .input {
-  font-size: 1.25rem;
+.new-item__label {
+  width: 100%;
+}
+
+.new-item__input {
   flex-grow: 1;
+  font-size: 1.25rem;
   padding: 0.5rem;
 }
 
-.new-item-box .button {
+.new-item__btn {
   min-width: 3.125rem;
 }
 
@@ -93,62 +123,34 @@ body {
   gap: 0.625rem;
 }
 
-.item .title {
+.item__title {
   flex-grow: 1;
 }
 
-.item .label-edit {
+.item__label-edit {
   flex-grow: 1;
+  width: 100%;
 }
 
-.item .input-edit {
+.item__input-edit {
   font-size: 1.25rem;
   padding: 0.125rem;
 }
 
-.item .button-container {
+.item__btn-container {
   display: flex;
-  gap: 0.375rem;
   align-items: baseline;
+  gap: 0.375rem;
 }
 
-.item .button-container button {
+.item__btn-container button {
   min-width: 3.125rem;
 }
 
-.item.editing .title {
+.item.editing .item__title {
   display: none;
 }
 
-.count {
+.items-count {
   align-self: center;
-}
-
-.users {
-  display: flex;
-  flex-direction: column;
-  gap: 1.625rem;
-  list-style: none;
-  text-align: center;
-  font-size: 1.25rem;
-  padding: 0;
-}
-
-.new-user {
-  font-size: 1.25rem;
-}
-
-.users li {
-  position: relative;
-}
-
-.users a:hover {
-  color: salmon;
-}
-
-.users .button-container {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  min-width: 100px;
 }

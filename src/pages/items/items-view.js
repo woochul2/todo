@@ -8,10 +8,10 @@ import ItemsTemplate from './items-template.js';
 export default function ItemsView(template) {
   this.template = template;
 
-  this.$username = document.querySelector('.user-name');
-  this.$newInputBox = document.querySelector('.new-item-box');
+  this.$username = document.querySelector('.page-items__username');
+  this.$newItem = document.querySelector('.new-item');
   this.$items = document.querySelector('.items');
-  this.$count = document.querySelector('.count');
+  this.$count = document.querySelector('.items-count');
 
   this.removeEventListener = this.init();
 }
@@ -22,7 +22,7 @@ export default function ItemsView(template) {
  * @returns {function} 이벤트 리스너를 삭제하는 함수
  */
 ItemsView.prototype.init = function () {
-  var input = this.$newInputBox.querySelector('.input');
+  var input = this.$newItem.querySelector('.new-item__input');
   input.focus();
 
   var listener = this.focus.bind(this);
@@ -42,7 +42,7 @@ ItemsView.prototype.focus = function (event) {
   if (event.key === '/') {
     event.preventDefault();
 
-    var input = this.$newInputBox.querySelector('.input');
+    var input = this.$newItem.querySelector('.new-item__input');
     input.focus();
   }
 };
@@ -86,14 +86,12 @@ ItemsView.prototype.watchNewInput = function (handler) {
   }
 
   function clickListener(event) {
-    var button = event.target.closest('.button');
+    var button = event.target.closest('.new-item__btn');
     if (!button) {
       return;
     }
 
-    var inputBox = event.target.closest('.new-item-box');
-    var input = inputBox.querySelector('.input');
-
+    var input = this.$newItem.querySelector('.new-item__input');
     var title = input.value.trim();
     if (title === '') {
       return;
@@ -104,8 +102,8 @@ ItemsView.prototype.watchNewInput = function (handler) {
     input.focus();
   }
 
-  this.$newInputBox.addEventListener('keydown', keydownListener);
-  this.$newInputBox.addEventListener('click', clickListener);
+  this.$newItem.addEventListener('keydown', keydownListener);
+  this.$newItem.addEventListener('click', clickListener.bind(this));
 };
 
 /**
@@ -116,7 +114,7 @@ ItemsView.prototype.watchNewInput = function (handler) {
 ItemsView.prototype.watchRemove = function (handler) {
   function listener(event) {
     var item = event.target.closest('.item');
-    if (!item || !event.target.closest('.delete-btn')) {
+    if (!item || !event.target.closest('.item__delete-btn')) {
       return;
     }
 
@@ -133,7 +131,7 @@ ItemsView.prototype.watchRemove = function (handler) {
  */
 ItemsView.prototype.watchEditStart = function (handler) {
   function doubleClickListener(event) {
-    if (!event.target.closest('.title')) {
+    if (!event.target.closest('.item__title')) {
       return;
     }
 
@@ -147,7 +145,7 @@ ItemsView.prototype.watchEditStart = function (handler) {
 
   function clickListener(event) {
     var item = event.target.closest('.item');
-    if (!item || !event.target.closest('.edit-btn') || item.classList.contains('editing')) {
+    if (!item || !event.target.closest('.item__edit-btn') || item.classList.contains('editing')) {
       return;
     }
 
@@ -168,7 +166,7 @@ ItemsView.prototype.watchEditStart = function (handler) {
 ItemsView.prototype.watchEdit = function (handler) {
   function clickListener(event) {
     var item = event.target.closest('.item');
-    if (!item || !event.target.closest('.edit-btn')) {
+    if (!item || !event.target.closest('.item__edit-btn')) {
       return;
     }
 
@@ -177,21 +175,21 @@ ItemsView.prototype.watchEdit = function (handler) {
       return;
     }
 
-    var input = item.querySelector('.input-edit');
+    var input = item.querySelector('.item__input-edit');
     var title = input.value.trim();
     handler(Number(item.dataset.id), title);
   }
 
   function keydownListener(event) {
     var item = event.target.closest('.item');
-    if (!item || !event.target.closest('.input-edit')) {
+    if (!item || !event.target.closest('.item__input-edit')) {
       return;
     }
 
     item.startedEditing = false;
 
     if (event.key === KEY.ENTER) {
-      var input = item.querySelector('.input-edit');
+      var input = item.querySelector('.item__input-edit');
       var nextTitle = input.value.trim();
       handler(Number(item.dataset.id), nextTitle);
     } else if (event.key === KEY.ESCAPE) {
@@ -275,13 +273,13 @@ ItemsView.prototype.renderRemove = function (itemId) {
 ItemsView.prototype.renderEditStart = function (itemId) {
   var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
   item.classList.add('editing');
-  var title = item.querySelector('.title');
+  var title = item.querySelector('.item__title');
   title.outerHTML = this.template.editInput(title.innerHTML);
-  var editButton = item.querySelector('.edit-btn');
+  var editButton = item.querySelector('.item__edit-btn');
   editButton.innerHTML = '완료';
   editButton.ariaLabel = '완료';
 
-  var input = item.querySelector('.input-edit');
+  var input = item.querySelector('.item__input-edit');
   input.focus();
   var cursorPos = input.value.length;
   input.setSelectionRange(cursorPos, cursorPos);
@@ -298,12 +296,12 @@ ItemsView.prototype.renderEdit = function ({ itemId, title }) {
   var item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
   item.classList.remove('editing');
 
-  var label = item.querySelector('.label-edit');
-  var input = label.querySelector('.input-edit');
+  var label = item.querySelector('.item__label-edit');
+  var input = label.querySelector('.item__input-edit');
   var nextTitle = !title || title.trim() === '' ? input.defaultValue : title;
   label.outerHTML = this.template.title(nextTitle);
 
-  var editButton = item.querySelector('.edit-btn');
+  var editButton = item.querySelector('.item__edit-btn');
   editButton.innerHTML = '수정';
   editButton.ariaLabel = '수정';
 };
