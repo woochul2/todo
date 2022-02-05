@@ -3,7 +3,7 @@ import Model from '../src/pages/items/items-model.js';
 import { createStorageStub, createViewStub, setUpMethod } from './test-utils.js';
 
 describe('Items controller', () => {
-  var initialItem, fakeDB, storage, model, view, controller;
+  let initialItem, fakeDB, storage, model, view, controller;
 
   beforeEach(() => {
     initialItem = { id: 123, title: '첫 번째 항목', completed: false };
@@ -29,8 +29,8 @@ describe('Items controller', () => {
   it('new item', () => {
     setUpMethod(model, 'create');
 
-    var title = '새로운 항목';
-    var item = { id: jasmine.any(Number), title, completed: false };
+    const title = '새로운 항목';
+    const item = { id: jasmine.any(Number), title, completed: false };
 
     view.trigger('new-item', title);
 
@@ -42,7 +42,7 @@ describe('Items controller', () => {
   it('remove', () => {
     setUpMethod(model, 'delete');
 
-    var { id } = initialItem;
+    const { id } = initialItem;
 
     view.trigger('remove', id);
 
@@ -52,7 +52,7 @@ describe('Items controller', () => {
   });
 
   it('start editing', () => {
-    var { id } = initialItem;
+    const { id } = initialItem;
 
     view.trigger('edit-start', id);
 
@@ -62,8 +62,8 @@ describe('Items controller', () => {
   it('edit', () => {
     setUpMethod(model, 'update');
 
-    var itemId = initialItem.id;
-    var title = '수정할 이름';
+    const itemId = initialItem.id;
+    const title = '수정할 이름';
 
     view.trigger('edit', itemId, title);
 
@@ -73,8 +73,8 @@ describe('Items controller', () => {
   });
 
   it('cancel editing', () => {
-    var itemId = initialItem.id;
-    var title = '';
+    const itemId = initialItem.id;
+    const title = '';
 
     view.trigger('edit', itemId, title);
 

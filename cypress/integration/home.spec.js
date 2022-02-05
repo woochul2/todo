@@ -16,26 +16,26 @@ describe('home', () => {
   });
 
   it('새로운 유저를 추가한다: 엔터 입력', () => {
-    var username = '    하이';
+    const username = '    하이';
     cy.get('.new-user input').type(`${username}{enter}`);
     cy.get('.users li a').should('have.length', 3).last().should('have.text', username.trim());
   });
 
   it('새로운 유저를 추가한다: 추가 버튼 클릭', () => {
-    var username = '    하이';
+    const username = '    하이';
     cy.get('.new-user input').type(`${username}`);
     cy.get('.new-user button').click();
     cy.get('.users li a').should('have.length', 3).last().should('have.text', username.trim());
   });
 
   it('빈 문자열이면 유저를 추가하지 않는다', () => {
-    var username = '    ';
+    const username = '    ';
     cy.get('.new-user input').type(`${username}{enter}`);
     cy.get('.users li a').should('have.length', 2);
   });
 
   it('유저 이름을 수정한다', () => {
-    var username = '     하이요';
+    const username = '     하이요';
 
     cy.window().then((win) => {
       cy.stub(win, 'prompt').returns(username.trim());
@@ -46,7 +46,7 @@ describe('home', () => {
   });
 
   it('빈 문자열이면 유저 이름을 수정하지 않는다', () => {
-    var username = '     ';
+    const username = '     ';
 
     cy.window().then((win) => {
       cy.stub(win, 'prompt').returns(username.trim());

@@ -1,32 +1,30 @@
-export function createViewStub() {
-  var eventRegistry = {};
+export const createViewStub = () => {
+  const eventRegistry = {};
 
   return {
     render: jasmine.createSpy('render'),
-    watch: function (event, handler) {
+    watch: (event, handler) => {
       eventRegistry[event] = handler;
     },
-    trigger: function (event, ...rest) {
+    trigger: (event, ...rest) => {
       eventRegistry[event](...rest);
     },
   };
-}
+};
 
-export function createStorageStub(fakeDB, callback) {
-  var storage = jasmine.createSpyObj('storage', ['get', 'set']);
+export const createStorageStub = (fakeDB, callback) => {
+  const storage = jasmine.createSpyObj('storage', ['get', 'set']);
 
-  storage.get.and.callFake(function () {
-    return fakeDB;
-  });
+  storage.get.and.callFake(() => fakeDB);
 
-  storage.set.and.callFake(function (value) {
+  storage.set.and.callFake((value) => {
     callback(value);
   });
 
   return storage;
-}
+};
 
-export function setUpMethod(obj, name) {
+export const setUpMethod = (obj, name) => {
   spyOn(obj, name);
   obj[name].and.callThrough();
-}
+};

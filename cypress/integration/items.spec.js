@@ -16,20 +16,20 @@ describe('items', () => {
   });
 
   it('새로운 항목을 추가한다: 엔터 키 입력', () => {
-    var title = '    세 번째 항목';
+    const title = '    세 번째 항목';
     cy.get('.new-item input').type(`${title}{enter}`);
     cy.get('.items li .item__title').should('have.length', 3).last().should('have.text', title.trim());
   });
 
   it('새로운 항목을 추가한다: 추가 버튼 클릭', () => {
-    var title = '    세 번째 항목';
+    const title = '    세 번째 항목';
     cy.get('.new-item input').type(`${title}`);
     cy.get('.new-item button').click();
     cy.get('.items li .item__title').should('have.length', 3).last().should('have.text', title.trim());
   });
 
   it('빈 문자열이면 항목을 추가하지 않는다', () => {
-    var title = '    ';
+    const title = '    ';
     cy.get('.new-item input').type(`${title}{enter}`);
     cy.get('.items li .item__title').should('have.length', 2);
   });
@@ -47,14 +47,14 @@ describe('items', () => {
   });
 
   it('항목 제목을 수정한다: 엔터 키 입력', () => {
-    var title = '      새로운 항목';
+    const title = '      새로운 항목';
     cy.get('.items li .item__edit-btn').last().click();
     cy.get('.items li input').last().clear().type(`${title}{enter}`);
     cy.get('.items li .item__title').last().should('have.text', title.trim());
   });
 
   it('항목 제목을 수정한다: 완료 버튼 클릭', () => {
-    var title = '      새로운 항목';
+    const title = '      새로운 항목';
     cy.get('.items li .item__title').last().dblclick();
     cy.get('.items li input').last().clear().type(`${title}`);
     cy.get('.items li .item__edit-btn').last().click();
@@ -62,7 +62,7 @@ describe('items', () => {
   });
 
   it('항목 제목을 수정을 취소한다: ESC키 입력', () => {
-    var title = '      새로운 항목';
+    const title = '      새로운 항목';
     cy.get('.items li .item__edit-btn').last().click();
     cy.get('.items li input').last().clear().type(`${title}`);
     cy.get('.items li input').last().type('{esc}');
@@ -71,7 +71,7 @@ describe('items', () => {
   });
 
   it('항목 제목을 수정을 취소한다: 빈 문자열 입력', () => {
-    var title = '      ';
+    const title = '      ';
     cy.get('.items li .item__edit-btn').last().click();
     cy.get('.items li input').last().clear().type(`${title}{enter}`);
     cy.get('.items li .item__title').last().should('have.text', '두 번째 항목');
