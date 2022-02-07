@@ -1,11 +1,8 @@
-import ItemsModel from './items-model.js';
-import ItemsView from './items-view.js';
-
-/**
- * @param {ItemsModel} model
- * @param {ItemsView} view
- */
 export default class ItemsController {
+  /**
+   * @param {import('./items-model').default} model
+   * @param {import('./items-view').default} view
+   */
   constructor(model, view) {
     this.model = model;
     this.view = view;
@@ -17,9 +14,9 @@ export default class ItemsController {
    * 최초 생성 시 사용자 입력에 따라 어떤 함수를 실행할지 설정한다.
    */
   init() {
-    this.view.watch('new-item', this.add.bind(this));
+    this.view.watch('newItem', this.add.bind(this));
     this.view.watch('remove', this.remove.bind(this));
-    this.view.watch('edit-start', this.editStart.bind(this));
+    this.view.watch('editStart', this.editStart.bind(this));
     this.view.watch('edit', this.edit.bind(this));
   }
 
@@ -50,8 +47,8 @@ export default class ItemsController {
    * @param {number} itemId
    */
   remove(itemId) {
-    this.model.delete(itemId, (itemId) => {
-      this.view.render('remove', itemId);
+    this.model.delete(itemId, (id) => {
+      this.view.render('remove', id);
     });
   }
 
@@ -61,7 +58,7 @@ export default class ItemsController {
    * @param {number} itemId
    */
   editStart(itemId) {
-    this.view.render('edit-start', itemId);
+    this.view.render('editStart', itemId);
   }
 
   /**
@@ -71,15 +68,12 @@ export default class ItemsController {
    * @param {string | undefined} title
    */
   edit(itemId, title) {
-    const callback = (itemId, title) => {
-      this.view.render('edit', { itemId, title });
+    const callback = (id, name) => {
+      this.view.render('edit', { itemId: id, title: name });
     };
 
-    if (!title) {
-      callback(itemId, title);
-    } else {
-      this.model.update(itemId, title, callback);
-    }
+    if (!title) callback(itemId, title);
+    else this.model.update(itemId, title, callback);
   }
 
   /**
@@ -88,7 +82,7 @@ export default class ItemsController {
   toggle() {}
 
   /**
-   * 모든 항목을 완료 상태를 토글한다.
+   * 모든 항목의 완료 상태를 토글한다.
    */
   toggleAll() {}
 

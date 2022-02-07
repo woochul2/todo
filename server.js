@@ -7,9 +7,7 @@ const path = require('path');
  * @param {string} target
  * @returns {string}
  */
-const getPath = (target) => {
-  return path.join(__dirname, target);
-};
+const getPath = (target) => path.join(__dirname, target);
 
 const main = () => {
   const app = express();
@@ -23,6 +21,7 @@ const main = () => {
   });
 
   app.listen(port, () => {
+    // eslint-disable-next-line no-console
     console.log(`Server is listening on port ${port}/`);
   });
 };

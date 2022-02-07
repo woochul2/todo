@@ -1,7 +1,7 @@
-import ViewParent from '../../abstract/view-parent.js';
+import View from '../../abstract/view.js';
 import { KEY } from '../../constants.js';
 
-export default class HomeView extends ViewParent {
+export default class HomeView extends View {
   constructor() {
     super();
 
@@ -32,7 +32,7 @@ export default class HomeView extends ViewParent {
    * @param {KeyboardEvent} event
    */
   focus(event) {
-    super.focus(event, this.$newUserInput);
+    View.focus(event, this.$newUserInput);
   }
 
   /**
@@ -41,32 +41,25 @@ export default class HomeView extends ViewParent {
    *
    * @param {function} handler username을 받아 유저를 추가하는 함수
    */
-  ['watch_new-user'](handler) {
+  watchNewUser(handler) {
     const keydownListener = (event) => {
-      if (event.key !== KEY.ENTER) {
-        return;
-      }
+      if (event.key !== KEY.enter) return;
 
       const username = event.target.value.trim();
-      if (username === '') {
-        return;
-      }
+      if (username === '') return;
 
       handler(username);
-      event.target.value = '';
+
+      this.$newUserInput.value = '';
     };
 
     const clickListener = (event) => {
       const button = event.target.closest('.new-user__btn');
-      if (!button) {
-        return;
-      }
+      if (!button) return;
 
       const input = this.$newUser.querySelector('.new-user__input');
       const username = input.value.trim();
-      if (username === '') {
-        return;
-      }
+      if (username === '') return;
 
       handler(username);
       input.value = '';
@@ -82,7 +75,7 @@ export default class HomeView extends ViewParent {
    *
    * @param {function} handler id를 받아 유저 한 명을 삭제하는 함수
    */
-  watch_remove(handler) {
+  watchRemove(handler) {
     const listener = (event) => {
       const user = event.target.closest('.user');
       if (!user || !event.target.closest('.user__delete-btn')) {
@@ -100,22 +93,19 @@ export default class HomeView extends ViewParent {
    *
    * @param {function} handler id와 username을 받아 유저 이름을 수정하는 함수
    */
-  watch_edit(handler) {
+  watchEdit(handler) {
     const listener = (event) => {
       const user = event.target.closest('.user');
       if (!user || !event.target.closest('.user__edit-btn')) {
         return;
       }
 
+      // eslint-disable-next-line no-alert
       const value = window.prompt('수정할 사용자 이름을 입력하세요:');
-      if (!value) {
-        return;
-      }
+      if (!value) return;
 
       const username = value.trim();
-      if (!username) {
-        return;
-      }
+      if (!username) return;
 
       handler(Number(user.dataset.id), username);
     };
@@ -128,8 +118,8 @@ export default class HomeView extends ViewParent {
    *
    * @param {User[]} users
    */
-  render_all(users) {
-    const callback = (user) => this.template.user(user.id, user.name);
+  renderAll(users) {
+    const callback = (user) => HomeView.template.user(user.id, user.name);
 
     this.$users.innerHTML = users.map(callback).join('');
   }
@@ -139,9 +129,9 @@ export default class HomeView extends ViewParent {
    *
    * @param {User} user
    */
-  render_add(user) {
+  renderAdd(user) {
     const tmp = document.createElement('div');
-    tmp.innerHTML = this.template.user(user.id, user.name);
+    tmp.innerHTML = HomeView.template.user(user.id, user.name);
     this.$users.appendChild(tmp.firstElementChild);
   }
 
@@ -150,7 +140,7 @@ export default class HomeView extends ViewParent {
    *
    * @param {number} userId
    */
-  render_remove(userId) {
+  renderRemove(userId) {
     const user = this.$users.querySelector(`.user[data-id="${userId}"]`);
     user.remove();
   }
@@ -162,13 +152,13 @@ export default class HomeView extends ViewParent {
    * @param {number} param.userId
    * @param {string} param.username 새로 수정한 유저 이름
    */
-  render_edit({ userId, username }) {
+  renderEdit({ userId, username }) {
     const user = this.$users.querySelector(`.user[data-id="${userId}"]`);
     const link = user.querySelector('.user__link');
     link.innerHTML = username;
   }
 
-  get template() {
+  static get template() {
     return {
       /**
        * 해당 유저의 항목으로 이동하는 링크와 수정, 삭제 버튼을 포함한 템플릿
@@ -177,17 +167,15 @@ export default class HomeView extends ViewParent {
        * @param {string} username 유저 이름을 화면에 출력한다.
        * @returns
        */
-      user: (userId, username) => {
-        return `
-          <li data-id="${userId}" class="user">
-            <a href="/${userId}/items" class="user__link" aria-label="${username} 사용자의 항목">${username}</a>
-            <div class="user__btn-container">
-              <button class="user__edit-btn" aria-label="${username} 사용자의 이름 수정">수정</button>
-              <button class="user__delete-btn" aria-label="${username} 사용자 삭제">삭제</button>
-            </div>
-          </li>
-        `;
-      },
+      user: (userId, username) => `
+        <li data-id="${userId}" class="user">
+          <a href="/${userId}/items" class="user__link" aria-label="${username} 사용자의 항목">${username}</a>
+          <div class="user__btn-container">
+            <button class="user__edit-btn" aria-label="${username} 사용자의 이름 수정">수정</button>
+            <button class="user__delete-btn" aria-label="${username} 사용자 삭제">삭제</button>
+          </div>
+        </li>
+      `,
     };
   }
 }

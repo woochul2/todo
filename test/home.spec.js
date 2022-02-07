@@ -1,13 +1,18 @@
 import Controller from '../src/pages/home/home-controller.js';
 import Model from '../src/pages/home/home-model.js';
-import { createStorageStub, createViewStub, setUpMethod } from './test-utils.js';
+import {
+  createStorageStub,
+  createViewStub,
+  setUpMethod,
+} from './test-utils.js';
 
 describe('Home controller', () => {
+  // eslint-disable-next-line one-var, one-var-declaration-per-line
   let initialUser, fakeDB, storage, model, view, controller;
 
   beforeEach(() => {
     initialUser = { id: 1, name: '이름', items: [] };
-    fakeDB = [Object.assign({}, initialUser)];
+    fakeDB = [{ ...initialUser }];
 
     storage = createStorageStub(fakeDB, (value) => {
       fakeDB = value;
@@ -32,7 +37,7 @@ describe('Home controller', () => {
     const username = '새로운 유저 이름';
     const user = { id: jasmine.any(Number), name: username, items: [] };
 
-    view.trigger('new-user', username);
+    view.trigger('newUser', username);
 
     expect(model.create).toHaveBeenCalledWith(username, jasmine.any(Function));
     expect(view.render).toHaveBeenCalledWith('add', user);
@@ -59,7 +64,8 @@ describe('Home controller', () => {
 
     view.trigger('edit', userId, username);
 
-    expect(model.update).toHaveBeenCalledWith(userId, username, jasmine.any(Function));
+    const modelParams = [userId, username, jasmine.any(Function)];
+    expect(model.update).toHaveBeenCalledWith(...modelParams);
     expect(view.render).toHaveBeenCalledWith('edit', { userId, username });
     expect(fakeDB).toEqual([{ ...initialUser, name: username }]);
   });

@@ -1,8 +1,6 @@
-import Store from '../../storage.js';
-
 export default class ItemsModel {
   /**
-   * @param {Store} storage
+   * @param {import('../../storage').default} storage
    * @param {number} userId
    */
   constructor(storage, userId) {
@@ -28,7 +26,7 @@ export default class ItemsModel {
    */
   getUser() {
     const users = this.storage.get();
-    const user = users.find((user) => user.id === this.userId);
+    const user = users.find(({ id }) => id === this.userId);
     return user;
   }
 
@@ -88,7 +86,7 @@ export default class ItemsModel {
     const users = this.storage.get();
     const userIndex = this.getUserIndex();
     const user = users[userIndex];
-    const item = user.items.find((item) => item.id === itemId);
+    const item = user.items.find(({ id }) => id === itemId);
     item.title = title;
     this.storage.set(users);
 

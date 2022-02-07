@@ -5,27 +5,21 @@ const main = () => {
   const root = document.getElementById('root');
 
   const render = (path) => {
-    if (path === '/') {
-      return new Home(root);
-    } else if (/\/\d+\/items/.test(path)) {
-      return new Items(root);
-    }
+    if (path === '/') return new Home(root);
+    if (/\/\d+\/items/.test(path)) return new Items(root);
+    return new Home(root);
   };
 
   let prev;
 
   const removeEventListener = () => {
-    if (!prev) {
-      return;
-    }
+    if (!prev) return;
 
     prev.removeEventListener();
   };
 
   root.addEventListener('click', (event) => {
-    if (!event.target.matches('a')) {
-      return;
-    }
+    if (!event.target.matches('a')) return;
 
     event.preventDefault();
     removeEventListener();

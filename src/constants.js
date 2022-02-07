@@ -1,6 +1,6 @@
 export const KEY = Object.freeze({
-  ENTER: 'Enter',
-  ESCAPE: 'Escape',
+  enter: 'Enter',
+  escape: 'Escape',
 });
 
 export const STORAGE_KEY = 'todo';

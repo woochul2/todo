@@ -1,7 +1,7 @@
-import ViewParent from '../../abstract/view-parent.js';
+import View from '../../abstract/view.js';
 import { KEY } from '../../constants.js';
 
-export default class ItemsView extends ViewParent {
+export default class ItemsView extends View {
   constructor() {
     super();
 
@@ -34,7 +34,7 @@ export default class ItemsView extends ViewParent {
    * @param {KeyboardEvent} event
    */
   focus(event) {
-    super.focus(event, this.$newItemInput);
+    View.focus(event, this.$newItemInput);
   }
 
   /**
@@ -42,32 +42,25 @@ export default class ItemsView extends ViewParent {
    *
    * @param {function} handler title을 받아 항목을 추가하는 함수
    */
-  ['watch_new-item'](handler) {
+  watchNewItem(handler) {
     const keydownListener = (event) => {
-      if (event.key !== KEY.ENTER) {
-        return;
-      }
+      if (event.key !== KEY.enter) return;
 
       const title = event.target.value.trim();
-      if (title === '') {
-        return;
-      }
+      if (title === '') return;
 
       handler(title);
-      event.target.value = '';
+
+      this.$newUserInput.value = '';
     };
 
     const clickListener = (event) => {
       const button = event.target.closest('.new-item__btn');
-      if (!button) {
-        return;
-      }
+      if (!button) return;
 
       const input = this.$newItem.querySelector('.new-item__input');
       const title = input.value.trim();
-      if (title === '') {
-        return;
-      }
+      if (title === '') return;
 
       handler(title);
       input.value = '';
@@ -83,7 +76,7 @@ export default class ItemsView extends ViewParent {
    *
    * @param {function} handler id를 받아 항목 하나를 삭제하는 함수
    */
-  watch_remove(handler) {
+  watchRemove(handler) {
     const listener = (event) => {
       const item = event.target.closest('.item');
       if (!item || !event.target.closest('.item__delete-btn')) {
@@ -101,7 +94,7 @@ export default class ItemsView extends ViewParent {
    *
    * @param {function} handler id를 받아 항목 수정 시작을 알리는 함수
    */
-  ['watch_edit-start'](handler) {
+  watchEditStart(handler) {
     const doubleClickListener = (event) => {
       if (!event.target.closest('.item__title')) {
         return;
@@ -117,7 +110,9 @@ export default class ItemsView extends ViewParent {
 
     const clickListener = (event) => {
       const item = event.target.closest('.item');
-      if (!item || !event.target.closest('.item__edit-btn') || item.classList.contains('editing')) {
+      const editBtn = event.target.closest('.item__edit-btn');
+      const isEditing = item.classList.contains('editing');
+      if (!item || !editBtn || isEditing) {
         return;
       }
 
@@ -135,7 +130,7 @@ export default class ItemsView extends ViewParent {
    *
    * @param {function} handler id와 title을 받아 항목을 수정하는 함수
    */
-  watch_edit(handler) {
+  watchEdit(handler) {
     const clickListener = (event) => {
       const item = event.target.closest('.item');
       if (!item || !event.target.closest('.item__edit-btn')) {
@@ -160,11 +155,11 @@ export default class ItemsView extends ViewParent {
 
       item.startedEditing = false;
 
-      if (event.key === KEY.ENTER) {
+      if (event.key === KEY.enter) {
         const input = item.querySelector('.item__input-edit');
         const nextTitle = input.value.trim();
         handler(Number(item.dataset.id), nextTitle);
-      } else if (event.key === KEY.ESCAPE) {
+      } else if (event.key === KEY.escape) {
         handler(Number(item.dataset.id));
       }
     };
@@ -180,8 +175,8 @@ export default class ItemsView extends ViewParent {
    * @param {string} param.username
    * @param {Item[]} param.items
    */
-  render_all({ username, items }) {
-    const callback = (el) => this.template.item(el);
+  renderAll({ username, items }) {
+    const callback = (el) => ItemsView.template.item(el);
 
     this.$username.innerHTML = username;
     this.$items.innerHTML = items.map(callback, this).join('');
@@ -193,12 +188,12 @@ export default class ItemsView extends ViewParent {
    *
    * @param {Item} item
    */
-  render_add(item) {
+  renderAdd(item) {
     const tmp = document.createElement('div');
-    tmp.innerHTML = this.template.item(item);
+    tmp.innerHTML = ItemsView.template.item(item);
     this.$items.appendChild(tmp.firstElementChild);
 
-    const nextCount = parseInt(this.$count.innerHTML) + 1;
+    const nextCount = parseInt(this.$count.innerHTML, 10) + 1;
     this.$count.innerHTML = `${nextCount}개`;
   }
 
@@ -207,11 +202,11 @@ export default class ItemsView extends ViewParent {
    *
    * @param {number} itemId
    */
-  render_remove(itemId) {
+  renderRemove(itemId) {
     const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
     item.remove();
 
-    const nextCount = parseInt(this.$count.innerHTML) - 1;
+    const nextCount = parseInt(this.$count.innerHTML, 10) - 1;
     this.$count.innerHTML = `${nextCount}개`;
   }
 
@@ -220,11 +215,11 @@ export default class ItemsView extends ViewParent {
    *
    * @param {number} itemId
    */
-  ['render_edit-start'](itemId) {
+  renderEditStart(itemId) {
     const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
     item.classList.add('editing');
     const title = item.querySelector('.item__title');
-    title.outerHTML = this.template.editInput(title.innerHTML);
+    title.outerHTML = ItemsView.template.editInput(title.innerHTML);
     const editButton = item.querySelector('.item__edit-btn');
     editButton.innerHTML = '완료';
     editButton.ariaLabel = '완료';
@@ -242,21 +237,23 @@ export default class ItemsView extends ViewParent {
    * @param {number} param.itemId
    * @param {string} param.title 새로 입력한 제목
    */
-  render_edit({ itemId, title }) {
+  renderEdit({ itemId, title }) {
     const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
     item.classList.remove('editing');
 
     const label = item.querySelector('.item__label-edit');
     const input = label.querySelector('.item__input-edit');
-    const nextTitle = !title || title.trim() === '' ? input.defaultValue : title;
-    label.outerHTML = this.template.title(nextTitle);
+
+    const isTitleEmpty = !title || title.trim() === '';
+    const nextTitle = isTitleEmpty ? input.defaultValue : title;
+    label.outerHTML = ItemsView.template.title(nextTitle);
 
     const editButton = item.querySelector('.item__edit-btn');
     editButton.innerHTML = '수정';
     editButton.ariaLabel = '수정';
   }
 
-  get template() {
+  static get template() {
     return {
       /**
        * id, 제목, 완료 상태를 가진 항목
@@ -264,19 +261,17 @@ export default class ItemsView extends ViewParent {
        * @param {Item} item
        * @returns {string}
        */
-      item: (item) => {
-        return `
-          <li data-id="${item.id}" class="item">
-            <div class="item__inside">
-              <span class="item__title">${item.title}</span>
-              <div class="item__btn-container">
-                <button class="item__edit-btn" aria-label="수정">수정</button>
-                <button class="item__delete-btn" aria-label="삭제">삭제</button>
-              </div>
+      item: (item) => `
+        <li data-id="${item.id}" class="item">
+          <div class="item__inside">
+            <span class="item__title">${item.title}</span>
+            <div class="item__btn-container">
+              <button class="item__edit-btn" aria-label="수정">수정</button>
+              <button class="item__delete-btn" aria-label="삭제">삭제</button>
             </div>
-          </li>
-        `;
-      },
+          </div>
+        </li>
+      `,
 
       /**
        * 항목의 제목
@@ -284,9 +279,7 @@ export default class ItemsView extends ViewParent {
        * @param {*} title
        * @returns {string}
        */
-      title: (title) => {
-        return `<span class="item__title">${title}</span>`;
-      },
+      title: (title) => `<span class="item__title">${title}</span>`,
 
       /**
        * 수정을 시작하면 사용하는 input
@@ -294,14 +287,12 @@ export default class ItemsView extends ViewParent {
        * @param {string} value
        * @returns {string}
        */
-      editInput: (value) => {
-        return `
-          <label class="hidden-label item__label-edit">
-            항목 제목 수정
-            <input class="item__input-edit" value="${value}" />
-          </label>
-        `;
-      },
+      editInput: (value) => `
+        <label class="hidden-label item__label-edit">
+          항목 제목 수정
+          <input class="item__input-edit" value="${value}" />
+        </label>
+      `,
 
       /**
        * 모든 완료 항목을 삭제하는 버튼

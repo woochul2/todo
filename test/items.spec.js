@@ -1,13 +1,18 @@
 import Controller from '../src/pages/items/items-controller.js';
 import Model from '../src/pages/items/items-model.js';
-import { createStorageStub, createViewStub, setUpMethod } from './test-utils.js';
+import {
+  createStorageStub,
+  createViewStub,
+  setUpMethod,
+} from './test-utils.js';
 
 describe('Items controller', () => {
+  // eslint-disable-next-line one-var, one-var-declaration-per-line
   let initialItem, fakeDB, storage, model, view, controller;
 
   beforeEach(() => {
     initialItem = { id: 123, title: '첫 번째 항목', completed: false };
-    fakeDB = [{ id: 1, name: '이름', items: [Object.assign({}, initialItem)] }];
+    fakeDB = [{ id: 1, name: '이름', items: [{ ...initialItem }] }];
 
     storage = createStorageStub(fakeDB, (value) => {
       fakeDB = value;
@@ -23,7 +28,10 @@ describe('Items controller', () => {
     controller.setView();
 
     expect(model.read).toHaveBeenCalledWith(jasmine.any(Function));
-    expect(view.render).toHaveBeenCalledWith('all', { username: fakeDB[0].name, items: [initialItem] });
+    expect(view.render).toHaveBeenCalledWith('all', {
+      username: fakeDB[0].name,
+      items: [initialItem],
+    });
   });
 
   it('new item', () => {
@@ -32,7 +40,7 @@ describe('Items controller', () => {
     const title = '새로운 항목';
     const item = { id: jasmine.any(Number), title, completed: false };
 
-    view.trigger('new-item', title);
+    view.trigger('newItem', title);
 
     expect(model.create).toHaveBeenCalledWith(title, jasmine.any(Function));
     expect(view.render).toHaveBeenCalledWith('add', item);
@@ -54,9 +62,9 @@ describe('Items controller', () => {
   it('start editing', () => {
     const { id } = initialItem;
 
-    view.trigger('edit-start', id);
+    view.trigger('editStart', id);
 
-    expect(view.render).toHaveBeenCalledWith('edit-start', id);
+    expect(view.render).toHaveBeenCalledWith('editStart', id);
   });
 
   it('edit', () => {
@@ -67,7 +75,8 @@ describe('Items controller', () => {
 
     view.trigger('edit', itemId, title);
 
-    expect(model.update).toHaveBeenCalledWith(itemId, title, jasmine.any(Function));
+    const modelParams = [itemId, title, jasmine.any(Function)];
+    expect(model.update).toHaveBeenCalledWith(...modelParams);
     expect(view.render).toHaveBeenCalledWith('edit', { itemId, title });
     expect(fakeDB[0].items).toEqual([{ ...initialItem, title }]);
   });

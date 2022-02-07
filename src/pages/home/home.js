@@ -1,11 +1,11 @@
-import PageParent from '../../abstract/page-parent.js';
+import Page from '../../abstract/page.js';
 import { STORAGE_KEY } from '../../constants.js';
 import Store from '../../storage.js';
 import HomeController from './home-controller.js';
 import HomeModel from './home-model.js';
 import HomeView from './home-view.js';
 
-export default class Home extends PageParent {
+export default class Home extends Page {
   /**
    * @param {HTMLElement} root
    */

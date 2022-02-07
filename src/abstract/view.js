@@ -1,17 +1,16 @@
+import { capitalize } from '../utils.js';
+
 /**
  * @abstract
  */
-export default class ViewParent {
-  constructor() {}
-
+export default class View {
   /**
    * 슬래시(/) 키를 누르면 입력 창에 포커스 되도록 한다.
    *
-   * @abstract
    * @param {KeyboardEvent} event
    * @param {HTMLInputElement} input
    */
-  focus(event, input) {
+  static focus(event, input) {
     if (event.key === '/') {
       event.preventDefault();
 
@@ -26,7 +25,7 @@ export default class ViewParent {
    * @param {function} handler 사용자 입력에 따라 실행할 함수
    */
   watch(name, handler) {
-    this[`watch_${name}`](handler);
+    this[`watch${capitalize(name)}`](handler);
   }
 
   /**
@@ -36,6 +35,6 @@ export default class ViewParent {
    * @param {*} parameter DOM 엘리먼트를 업데이트하는 데 필요한 변수
    */
   render(command, parameter) {
-    this[`render_${command}`](parameter);
+    this[`render${capitalize(command)}`](parameter);
   }
 }

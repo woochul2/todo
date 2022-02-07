@@ -1,7 +1,7 @@
 /**
  * @abstract
  */
-export default class PageParent {
+export default class Page {
   /**
    * @param {HTMLElement} root
    */

@@ -1,8 +1,6 @@
-import Store from '../../storage.js';
-
 export default class HomeModel {
   /**
-   * @param {Store} storage
+   * @param {import('../../storage').default} storage
    */
   constructor(storage) {
     this.storage = storage;
@@ -55,7 +53,7 @@ export default class HomeModel {
    */
   update(userId, username, callback) {
     const users = this.storage.get();
-    const user = users.find((user) => user.id === userId);
+    const user = users.find(({ id }) => id === userId);
     user.name = username;
     this.storage.set(users);
 

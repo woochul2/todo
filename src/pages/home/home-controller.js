@@ -1,11 +1,8 @@
-import HomeModel from './home-model.js';
-import HomeView from './home-view.js';
-
-/**
- * @param {HomeModel} model
- * @param {HomeView} view
- */
 export default class HomeController {
+  /**
+   * @param {import('./home-model').default} model
+   * @param {import('./home-view').default} view
+   */
   constructor(model, view) {
     this.model = model;
     this.view = view;
@@ -17,7 +14,7 @@ export default class HomeController {
    * 최초 생성 시 사용자 입력에 따라 어떤 함수를 실행할지 설정한다.
    */
   init() {
-    this.view.watch('new-user', this.add.bind(this));
+    this.view.watch('newUser', this.add.bind(this));
     this.view.watch('remove', this.remove.bind(this));
     this.view.watch('edit', this.edit.bind(this));
   }
@@ -48,8 +45,8 @@ export default class HomeController {
    * @param {number} userId
    */
   remove(userId) {
-    this.model.delete(userId, (userId) => {
-      this.view.render('remove', userId);
+    this.model.delete(userId, (id) => {
+      this.view.render('remove', id);
     });
   }
 
@@ -60,8 +57,8 @@ export default class HomeController {
    * @param {string | undefined} username
    */
   edit(userId, username) {
-    this.model.update(userId, username, (userId, username) => {
-      this.view.render('edit', { userId, username });
+    this.model.update(userId, username, (id, name) => {
+      this.view.render('edit', { userId: id, username: name });
     });
   }
 }

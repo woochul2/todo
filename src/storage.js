@@ -15,9 +15,7 @@ export default class Store {
    */
   init() {
     const value = this.get();
-    if (!value) {
-      this.set([]);
-    }
+    if (!value) this.set([]);
   }
 
   /**

@@ -1,11 +1,11 @@
-import PageParent from '../../abstract/page-parent.js';
+import Page from '../../abstract/page.js';
 import { STORAGE_KEY } from '../../constants.js';
 import Store from '../../storage.js';
 import ItemsController from './items-controller.js';
 import ItemsModel from './items-model.js';
 import ItemsView from './items-view.js';
 
-export default class Items extends PageParent {
+export default class Items extends Page {
   /**
    * @param {HTMLElement} root
    */
@@ -45,10 +45,9 @@ export default class Items extends PageParent {
    * URL에 유저 id가 없으면 홈으로 이동한다.
    */
   init() {
-    const matchResult = window.location.pathname.match(/\/(?<userId>\d+)\/items/);
-    if (!matchResult) {
-      window.location.href = '/';
-    }
+    const regex = /\/(?<userId>\d+)\/items/;
+    const matchResult = window.location.pathname.match(regex);
+    if (!matchResult) window.location.href = '/';
 
     this.userId = Number(matchResult.groups.userId);
   }
@@ -60,10 +59,7 @@ export default class Items extends PageParent {
    */
   setView() {
     const user = this.model.getUser();
-    if (user) {
-      this.controller.setView();
-    } else {
-      window.location.href = '/';
-    }
+    if (user) this.controller.setView();
+    else window.location.href = '/';
   }
 }
