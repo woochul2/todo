@@ -54,7 +54,7 @@ export default class ItemsView extends View {
       this.$newItemInput.value = '';
     };
 
-    const clickListener = (event) => {
+    const newItemclickListener = (event) => {
       const button = event.target.closest('.new-item__btn');
       if (!button) return;
 
@@ -68,7 +68,7 @@ export default class ItemsView extends View {
     };
 
     this.$newItem.addEventListener('keydown', keydownListener);
-    this.$newItem.addEventListener('click', clickListener);
+    this.$newItem.addEventListener('click', newItemclickListener);
   }
 
   /**
@@ -108,13 +108,13 @@ export default class ItemsView extends View {
       handler(Number(item.dataset.id));
     };
 
-    const clickListener = (event) => {
+    const editStartclickListener = (event) => {
       const item = event.target.closest('.item');
+      if (!item) return;
+
       const editBtn = event.target.closest('.item__edit-btn');
       const isEditing = item.classList.contains('editing');
-      if (!item || !editBtn || isEditing) {
-        return;
-      }
+      if (!editBtn || isEditing) return;
 
       handler(Number(item.dataset.id));
 
@@ -122,13 +122,13 @@ export default class ItemsView extends View {
     };
 
     this.$items.addEventListener('dblclick', doubleClickListener);
-    this.$items.addEventListener('click', clickListener);
+    this.$items.addEventListener('click', editStartclickListener);
   }
 
   /**
    * 수정을 완료하는 이벤트 리스너를 등록한다.
    *
-   * @param {function} handler id와 title을 받아 항목을 수정하는 함수
+   * @param {function} handler id와 title을 받아 항목의 제목을 수정하는 함수
    */
   watchEdit(handler) {
     const clickListener = (event) => {
@@ -166,6 +166,23 @@ export default class ItemsView extends View {
 
     this.$items.addEventListener('click', clickListener);
     this.$items.addEventListener('keydown', keydownListener);
+  }
+
+  /**
+   *
+   * @param {function} handler id를 받아 항목의 완료 상태를 수정하는 함수
+   */
+  watchToggle(handler) {
+    const clickListener = (event) => {
+      const item = event.target.closest('.item');
+      if (!item || !event.target.closest('.item__checkbox')) {
+        return;
+      }
+
+      handler(Number(item.dataset.id));
+    };
+
+    this.$items.addEventListener('click', clickListener);
   }
 
   /**
@@ -253,6 +270,16 @@ export default class ItemsView extends View {
     editButton.ariaLabel = '수정';
   }
 
+  /**
+   * 수정한 항목의 완료 상태만 변경한다.
+   *
+   * @param {number} itemId
+   */
+  renderToggle(itemId) {
+    const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
+    item.classList.toggle('completed');
+  }
+
   static get template() {
     return {
       /**
@@ -261,17 +288,26 @@ export default class ItemsView extends View {
        * @param {Item} item
        * @returns {string}
        */
-      item: (item) => `
-        <li data-id="${item.id}" class="item">
-          <div class="item__inside">
-            <span class="item__title">${item.title}</span>
-            <div class="item__btn-container">
-              <button class="item__edit-btn" aria-label="수정">수정</button>
-              <button class="item__delete-btn" aria-label="삭제">삭제</button>
+      item: (item) => {
+        const className = item.completed ? 'item completed' : 'item';
+        const check = item.completed ? 'checked' : '';
+
+        return `
+          <li data-id="${item.id}" class="${className}">
+            <div class="item__inside">
+              <label class="hidden-label item__checkbox-label">
+                완료 상태
+                <input type="checkbox" class="item__checkbox" ${check} />
+              </label>
+              <span class="item__title">${item.title}</span>
+              <div class="item__btn-container">
+                <button class="item__edit-btn" aria-label="수정">수정</button>
+                <button class="item__delete-btn" aria-label="삭제">삭제</button>
+              </div>
             </div>
-          </div>
-        </li>
-      `,
+          </li>
+        `;
+      },
 
       /**
        * 항목의 제목
@@ -293,11 +329,6 @@ export default class ItemsView extends View {
           <input class="item__input-edit" value="${value}" />
         </label>
       `,
-
-      /**
-       * 모든 완료 항목을 삭제하는 버튼
-       */
-      clearCompletedButton: () => {},
     };
   }
 }

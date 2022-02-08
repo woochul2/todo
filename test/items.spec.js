@@ -68,7 +68,7 @@ describe('Items controller', () => {
   });
 
   it('edit', () => {
-    setUpMethod(model, 'update');
+    setUpMethod(model, 'updateTitle');
 
     const itemId = initialItem.id;
     const title = '수정할 이름';
@@ -76,7 +76,7 @@ describe('Items controller', () => {
     view.trigger('edit', itemId, title);
 
     const modelParams = [itemId, title, jasmine.any(Function)];
-    expect(model.update).toHaveBeenCalledWith(...modelParams);
+    expect(model.updateTitle).toHaveBeenCalledWith(...modelParams);
     expect(view.render).toHaveBeenCalledWith('edit', { itemId, title });
     expect(fakeDB[0].items).toEqual([{ ...initialItem, title }]);
   });
@@ -89,5 +89,17 @@ describe('Items controller', () => {
 
     expect(view.render).toHaveBeenCalledWith('edit', { itemId, title });
     expect(fakeDB[0].items).toEqual([initialItem]);
+  });
+
+  it('toggle', () => {
+    setUpMethod(model, 'updateCompletion');
+
+    const { id } = initialItem;
+
+    view.trigger('toggle', id);
+
+    const modelParams = [id, jasmine.any(Function)];
+    expect(model.updateCompletion).toHaveBeenCalledWith(...modelParams);
+    expect(view.render).toHaveBeenCalledWith('toggle', id);
   });
 });

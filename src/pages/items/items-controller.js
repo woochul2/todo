@@ -18,6 +18,7 @@ export default class ItemsController {
     this.view.watch('remove', this.remove.bind(this));
     this.view.watch('editStart', this.editStart.bind(this));
     this.view.watch('edit', this.edit.bind(this));
+    this.view.watch('toggle', this.toggle.bind(this));
   }
 
   /**
@@ -73,21 +74,17 @@ export default class ItemsController {
     };
 
     if (!title) callback(itemId, title);
-    else this.model.update(itemId, title, callback);
+    else this.model.updateTitle(itemId, title, callback);
   }
 
   /**
    * 항목의 완료 상태를 토글한다.
+   *
+   * @param {number} itemId
    */
-  toggle() {}
-
-  /**
-   * 모든 항목의 완료 상태를 토글한다.
-   */
-  toggleAll() {}
-
-  /**
-   * 모든 완료 항목을 삭제한다.
-   */
-  removeAllCompleted() {}
+  toggle(itemId) {
+    this.model.updateCompletion(itemId, (id) => {
+      this.view.render('toggle', id);
+    });
+  }
 }

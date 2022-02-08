@@ -76,13 +76,13 @@ export default class ItemsModel {
   }
 
   /**
-   * 스토리지의 유저의 항목 하나를 수정한다.
+   * 스토리지의 유저의 항목 제목을 수정한다.
    *
    * @param {number} itemId
    * @param {string} title
-   * @param {function} callback 항목 수정 후 실행할 콜백 함수
+   * @param {function} callback 항목 제목 수정 후 실행할 콜백 함수
    */
-  update(itemId, title, callback) {
+  updateTitle(itemId, title, callback) {
     const users = this.storage.get();
     const userIndex = this.getUserIndex();
     const user = users[userIndex];
@@ -94,12 +94,19 @@ export default class ItemsModel {
   }
 
   /**
-   * 스토리지의 모든 항목을 수정한다.
+   * 스토리지의 유저의 완료 상태를 수정한다.
+   *
+   * @param {number} itemId
+   * @param {function} callback 항목 완료 상태 수정 후 실행할 콜백 함수
    */
-  updateAll() {}
+  updateCompletion(itemId, callback) {
+    const users = this.storage.get();
+    const userIndex = this.getUserIndex();
+    const user = users[userIndex];
+    const item = user.items.find(({ id }) => id === itemId);
+    item.completed = !item.completed;
+    this.storage.set(users);
 
-  /**
-   * 스토리지에서 특정 조건을 만족하는 모든 항목을 삭제한다.
-   */
-  removeAll() {}
+    callback(itemId);
+  }
 }
