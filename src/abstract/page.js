@@ -24,6 +24,8 @@ export default class Page {
    * 페이지가 바뀔 때 글로벌 이벤트 리스너를 제거하는 메소드
    */
   removeEventListener() {
+    if (!this.view) return;
+
     this.view.removeEventListener();
   }
 }
