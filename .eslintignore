@@ -1,2 +1,3 @@
-cypress/plugins/index.js
-cypress/support/index.js
+/dist
+/cypress/plugins/index.js
+/cypress/support/index.js

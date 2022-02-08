@@ -51,7 +51,7 @@ export default class ItemsView extends View {
 
       handler(title);
 
-      this.$newUserInput.value = '';
+      this.$newItemInput.value = '';
     };
 
     const clickListener = (event) => {

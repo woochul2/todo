@@ -1,5 +1,6 @@
 import Home from './pages/home/home.js';
 import Items from './pages/items/items.js';
+import './style.css';
 
 const main = () => {
   const root = document.getElementById('root');
