@@ -4,41 +4,48 @@ import NotFound from './pages/NotFound.js';
 import './style.css';
 
 const main = () => {
+  let prevPage;
+  let prevPath;
+
   const root = document.getElementById('root');
 
   const render = (path) => {
+    prevPath = path;
+
     if (path === '/') return new Home(root);
     if (/\/\d+\/items$/.test(path)) return new Items(root);
     return new NotFound(root);
   };
 
-  let prev;
-
   const removeEventListener = () => {
-    if (!prev) return;
+    if (!prevPage) return;
 
-    prev.removeEventListener();
+    prevPage.removeEventListener();
   };
 
   root.addEventListener('click', (event) => {
     if (!event.target.matches('a')) return;
 
-    event.preventDefault();
+    const path = event.target.getAttribute('href');
+    if (path[0] === '#') return;
+
     removeEventListener();
 
-    const path = event.target.getAttribute('href');
     window.history.pushState({}, null, path);
 
-    prev = render(path);
+    prevPage = render(path);
   });
 
   window.addEventListener('popstate', () => {
+    const { pathname } = window.location;
+    if (prevPath === pathname) return;
+
     removeEventListener();
 
-    prev = render(window.location.pathname);
+    prevPage = render(pathname);
   });
 
-  prev = render(window.location.pathname);
+  prevPage = render(window.location.pathname);
 };
 
 main();

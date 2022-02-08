@@ -72,10 +72,11 @@ describe('home', () => {
 
   it('유저 링크를 클릭하고, 기본 항목을 출력한다', () => {
     cy.get('.users li a').first().click();
-    cy.get('.items li').should('have.length', 2);
+    cy.get('.items li').should('have.length', 3);
     cy.get('.items li .item__title')
       .first()
       .should('have.text', '첫 번째 항목');
-    cy.get('.items li .item__title').last().should('have.text', '두 번째 항목');
+    cy.get('.items li .item__title').eq(1).should('have.text', '두 번째 항목');
+    cy.get('.items li .item__title').last().should('have.text', '세 번째 항목');
   });
 });

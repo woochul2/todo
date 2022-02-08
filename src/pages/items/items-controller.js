@@ -24,10 +24,12 @@ export default class ItemsController {
   /**
    * URL hash에 따라 View를 초기화한다.
    * 전체 항목, 작업 중인 항목, 완료한 항목 중 무엇을 출력할지 결정한다.
+   *
+   * @param {string} hash
    */
-  setView() {
+  setView(hash) {
     this.model.read((username, items) => {
-      this.view.render('all', { username, items });
+      this.view.render('all', { username, items, hash });
     });
   }
 

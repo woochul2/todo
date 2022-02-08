@@ -35,7 +35,12 @@ export default class Items extends Page {
           <button class="new-item__btn" aria-label="새로운 항목 추가">추가</button>
         </div>
         <ul class="items"></ul>
-        <div class="items-count"></div>
+        <footer class="items-footer">
+          <div class="items-count"></div>
+          <a class="items-footer__all-btn" aria-label="전체 항목 보기" href="#">전체</a>
+          <a class="items-footer__active-btn" aria-label="완료하지 않은 항목만 보기" href="#active">작업 중</a>
+          <a class="items-footer__completed-btn" aria-label="완료한 항목만 보기" href="#completed">완료</a>
+        </footer>
       </main>
     `);
   }
@@ -59,7 +64,15 @@ export default class Items extends Page {
    */
   setView() {
     const user = this.model.getUser();
-    if (user) this.controller.setView();
-    else window.location.href = '/';
+
+    if (user) {
+      this.controller.setView(document.location.hash);
+
+      window.addEventListener('hashchange', () => {
+        this.controller.setView(document.location.hash);
+      });
+    } else {
+      window.location.href = '/';
+    }
   }
 }

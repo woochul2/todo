@@ -191,13 +191,34 @@ export default class ItemsView extends View {
    * @param {object} param
    * @param {string} param.username
    * @param {Item[]} param.items
+   * @param {string} hash URL hash
    */
-  renderAll({ username, items }) {
+  renderAll({ username, items, hash }) {
     const callback = (el) => ItemsView.template.item(el);
 
+    let currentItems;
+    if (hash === '#active') {
+      currentItems = items.filter(({ completed }) => completed === false);
+    } else if (hash === '#completed') {
+      currentItems = items.filter(({ completed }) => completed === true);
+    } else {
+      currentItems = items;
+    }
+
     this.$username.innerHTML = username;
-    this.$items.innerHTML = items.map(callback, this).join('');
-    this.$count.innerHTML = `${items.length}개`;
+    this.$items.innerHTML = currentItems.map(callback).join('');
+    this.$count.innerHTML = `${currentItems.length}개`;
+  }
+
+  /**
+   * 항목 개수만 변경한다.
+   *
+   * @param {function} callback
+   */
+  changeCount(callback) {
+    const count = parseInt(this.$count.innerHTML, 10);
+    const nextCount = callback(count);
+    this.$count.innerHTML = `${nextCount}개`;
   }
 
   /**
@@ -206,12 +227,12 @@ export default class ItemsView extends View {
    * @param {Item} item
    */
   renderAdd(item) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = ItemsView.template.item(item);
-    this.$items.appendChild(tmp.firstElementChild);
+    if (document.location.hash === '#completed') return;
 
-    const nextCount = parseInt(this.$count.innerHTML, 10) + 1;
-    this.$count.innerHTML = `${nextCount}개`;
+    const currentItems = document.createElement('div');
+    currentItems.innerHTML = ItemsView.template.item(item);
+    this.$items.appendChild(currentItems.firstElementChild);
+    this.changeCount((num) => num + 1);
   }
 
   /**
@@ -222,9 +243,7 @@ export default class ItemsView extends View {
   renderRemove(itemId) {
     const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
     item.remove();
-
-    const nextCount = parseInt(this.$count.innerHTML, 10) - 1;
-    this.$count.innerHTML = `${nextCount}개`;
+    this.changeCount((num) => num - 1);
   }
 
   /**
@@ -278,6 +297,12 @@ export default class ItemsView extends View {
   renderToggle(itemId) {
     const item = this.$items.querySelector(`.item[data-id="${itemId}"]`);
     item.classList.toggle('completed');
+
+    const { hash } = document.location;
+    if (hash === '#active' || hash === '#completed') {
+      item.remove();
+      this.changeCount((num) => num - 1);
+    }
   }
 
   static get template() {

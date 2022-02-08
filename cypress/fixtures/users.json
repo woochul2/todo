@@ -3,8 +3,9 @@
     "id": 1643683611810,
     "name": "유저1",
     "items": [
-      { "id": 1643683617030, "title": "첫 번째 항목", "completed": false },
-      { "id": 1643683620270, "title": "두 번째 항목", "completed": false }
+      { "id": 1643683617030, "title": "첫 번째 항목", "completed": true },
+      { "id": 1643683620270, "title": "두 번째 항목", "completed": false },
+      { "id": 1643683620271, "title": "세 번째 항목", "completed": false }
     ]
   },
   {
