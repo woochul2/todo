@@ -25,6 +25,7 @@ const main = () => {
 
   root.addEventListener('click', (event) => {
     if (!event.target.matches('a')) return;
+    event.preventDefault();
 
     const path = event.target.getAttribute('href');
     if (path[0] === '#') return;

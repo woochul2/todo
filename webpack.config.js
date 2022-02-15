@@ -9,7 +9,7 @@ module.exports = {
   mode: isProduction ? 'production' : 'development',
   watch: !isProduction,
   entry: {
-    main: './src/index.js',
+    main: './src/main.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

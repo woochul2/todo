@@ -2,10 +2,12 @@
   "name": "todo",
   "scripts": {
     "watch": "cross-env NODE_ENV=development webpack",
-    "dev": "nodemon './src/server.js",
+    "dev": "nodemon './index.js",
     "cypress:open": "cypress open",
     "build": "cross-env NODE_ENV=production webpack",
-    "start": "node ./src/server.js"
+    "start": "node ./index.js",
+    "deploy:dev": "yarn build && vercel",
+    "deploy:prod": "yarn build && vercel --prod"
   },
   "dependencies": {
     "express": "^4.17.2"
@@ -24,6 +26,7 @@
     "mini-css-extract-plugin": "^2.5.3",
     "nodemon": "^2.0.15",
     "style-loader": "^3.3.1",
+    "vercel": "^23.1.2",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2"
   }
